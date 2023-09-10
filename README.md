@@ -1,4 +1,4 @@
-## dolphin-quick-view
+# dolphin-quick-view
 
 Simple program to have a quick preview of the files in a folder (similar to Apple's Quick Look)
 
@@ -6,7 +6,7 @@ Simple program to have a quick preview of the files in a folder (similar to Appl
 
 Supported files: mp3,mp4,jpg,webp,svg,svgz,doc,docx,odt,xls,xlsx,csv,ods,md,pdf
 
-# Installation:
+## Installation:
 1: Download the latest release from here and extract it: https://github.com/Nyre221/dolphin-quick-view/releases/
 
 2: Install the dependencies (README_REQUIREMENTS.txt)
@@ -19,7 +19,7 @@ go to plasma settings -> shortcuts -> add a shortcut that executes a command: /h
 (you can activate the shortcut as you want)
 
 
-# Common Quick view shortcuts:
+## Common Quick view shortcuts:
 a, b and arrow keys = back and forward
 
 spacebar = open with default app
@@ -27,7 +27,7 @@ spacebar = open with default app
 q = quit
 
 
-# Debug:
+## Debug:
 If quick view doesn't open via dolphin's dropdown menu:
 open a terminal and type "dolphin", error messages will appear in the terminal window (possible missing dependencies)
 
@@ -40,4 +40,4 @@ if some mp4 files don't play it's probably because you're missing some gstreamer
 
 
 
-# Support me: https://www.paypal.com/donate/?hosted_button_id=J7QU55MMUP4G4
+## Support me: https://www.paypal.com/donate/?hosted_button_id=J7QU55MMUP4G4
