@@ -40,4 +40,4 @@ if some mp4 files don't play it's probably because you're missing some gstreamer
 
 
 
-Support me: https://www.paypal.com/donate/?hosted_button_id=J7QU55MMUP4G4
+# Support me: https://www.paypal.com/donate/?hosted_button_id=J7QU55MMUP4G4
