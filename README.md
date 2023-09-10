@@ -13,7 +13,7 @@ Supported files: mp3,mp4,jpg,webp,svg,svgz,doc,docx,odt,xls,xlsx,csv,ods,md,pdf
 
 3: Make the "INSTALL.sh" file executable (right click-> properties->check "executable") and run it
 
-4: If you want to open it with shortcut and not just use dolphin context menu:
+4: If you want to open it with a shortcut and not just via dolphin's context menu:
 go to plasma settings -> shortcuts -> add a shortcut that executes a command: /home/YOUR_USERNAME/.config/quick_view/dolphin_quick_view_shortcut.sh 
 
 (you can activate the shortcut as you want)
