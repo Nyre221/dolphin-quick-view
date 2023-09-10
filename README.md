@@ -38,3 +38,6 @@ if the pdfs are not visible it is because you have not installed python3-qpagevi
 
 if some mp4 files don't play it's probably because you're missing some gstreamer library
 
+
+
+Support me: https://www.paypal.com/donate/?hosted_button_id=J7QU55MMUP4G4
