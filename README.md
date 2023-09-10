@@ -7,11 +7,13 @@ Simple program to have a quick preview of the files in a folder (similar to Appl
 Supported files: mp3,mp4,jpg,webp,svg,svgz,doc,docx,odt,xls,xlsx,csv,ods,md,pdf
 
 # Installation:
-1: Install the dependencies (README_REQUIREMENTS.txt)
+1: Download the latest release from here and extract it: https://github.com/Nyre221/dolphin-quick-view/releases/
 
-2: Make the "INSTALL.sh" file executable (right click-> properties->check "executable") and run it
+2: Install the dependencies (README_REQUIREMENTS.txt)
 
-3: If you want to open it with shortcut and not just use dolphin context menu:
+3: Make the "INSTALL.sh" file executable (right click-> properties->check "executable") and run it
+
+4: If you want to open it with shortcut and not just use dolphin context menu:
 go to plasma settings -> shortcuts -> add a shortcut that executes a command: /home/YOUR_USERNAME/.config/quick_view/dolphin_quick_view_shortcut.sh 
 
 (you can activate the shortcut as you want)
@@ -23,8 +25,6 @@ a, b and arrow keys = back and forward
 spacebar = open with default app
 
 q = quit
-
-
 
 
 # Debug:
