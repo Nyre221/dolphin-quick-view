@@ -1,10 +1,9 @@
 #!/bin/python3
 
 #import QT
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout,QHBoxLayout,QPushButton,QStyle,QSizePolicy,QShortcut,QLabel
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout,QHBoxLayout,QPushButton,QStyle,QSizePolicy,QShortcut,QLabel 
 from PyQt5.QtGui import QKeySequence ,QFont
-from PyQt5 import QtGui
-from PyQt5.QtCore import Qt 
+from PyQt5.QtCore import Qt
 # import viewers
 import Page_viewer
 import Text_viewer
@@ -56,10 +55,11 @@ class Main(QMainWindow):
         screen_size = app.primaryScreen().size()
         self.resize(int(screen_size.width()*0.5),int(screen_size.height()*0.55))
         self.create_ui()
+        self.add_default_widget()
         self.set_shortcut()
-        self.load_file_at_index(self.current_index)        
         self.show()
         self.setFocus()
+        self.load_file_at_index(self.current_index)        
 
 
     def create_ui(self):
@@ -258,6 +258,12 @@ class Main(QMainWindow):
         #         self.page_viewer.img_mode()
         
         self.page_viewer.show()
+
+
+    def add_default_widget(self):
+    # I have to preload qpageview otherwise it crashes the program with some pdfs when run from a zipapp package.
+        self.page_viewer = Page_viewer.Viewer(self)
+        self.add_widget(self.page_viewer)
 
 
     def add_widget(self,widget):
