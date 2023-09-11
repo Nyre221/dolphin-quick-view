@@ -20,11 +20,11 @@ go to plasma settings -> shortcuts -> add a shortcut that executes a command: /h
 
 
 ## Common Quick view shortcuts:
-a, b and arrow keys = back and forward
+a,b and arrow keys = back and forward
 
-spacebar = open with default app
+spacebar, q and ESC = quit
 
-q = quit
+w and arrow up key = open with default app
 
 
 ## Debug:
