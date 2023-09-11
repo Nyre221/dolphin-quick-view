@@ -1,5 +1,5 @@
 Installation:
-1: Install the dependencies (README_REQUIREMENTS.txt)
+1: Install the dependencies listed in the Requirements folder
 2: make the "INSTALL.sh" file executable (right click-> properties->check "executable") and run it
 3: go to plasma settings -> shortcuts -> add a shortcut that executes a command: /home/YOUR_USERNAME/.config/quick_view/dolphin_quick_view_shortcut.sh 
 (you can activate the shortcut as you want)
