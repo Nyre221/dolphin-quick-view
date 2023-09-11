@@ -9,7 +9,7 @@ Supported files: mp3,mp4,jpg,webp,svg,svgz,doc,docx,odt,xls,xlsx,csv,ods,md,pdf
 ## Installation:
 1: Download the latest release from here and extract it: https://github.com/Nyre221/dolphin-quick-view/releases/
 
-2: Install the dependencies (README_REQUIREMENTS.txt)
+2: Install the requirements: https://github.com/Nyre221/dolphin-quick-view/tree/main/Requirements
 
 3: Make the "INSTALL.sh" file executable (right click-> properties->check "executable") and run it
 
@@ -20,11 +20,10 @@ go to plasma settings -> shortcuts -> add a shortcut that executes a command: /h
 
 
 ## Common Quick view shortcuts:
-a,b and arrow keys = back and forward
 
-spacebar, q and ESC = quit
-
-w and arrow up key = open with default app
+a,b and arrow keys = back and forward  
+spacebar, q and ESC = quit  
+w and arrow up key = open with default app  
 
 
 ## Debug:
