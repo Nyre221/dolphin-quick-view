@@ -1,0 +1,18 @@
+[Desktop Action default_action]
+Exec=$HOME/.config/quick_view/quick_view.pyz %F
+Icon=quickview
+Name=Quick View
+Name[it]=Anteprima Rapida
+
+[Desktop Entry]
+Actions=default_action;
+Exec=$HOME/.config/quick_view/quick_view.pyz %F
+Icon=quickview
+MimeType=all/all;
+Name=Quick View
+Name[it]=Anteprima Rapida
+ServiceTypes=KonqPopupMenu/Plugin
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-StartupNotify=false
+X-KDE-Submenu=
