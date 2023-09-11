@@ -1,0 +1,3 @@
+sudo apt install python3-pip python3-qpageview python3-pyqt5.qtsvg  python3-pyqt5.qtmultimedia antiword  python3-poppler-qt5 gstreamer1.0-libav
+
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract

@@ -1,0 +1,3 @@
+sudo dnf install python3-qt5 python3-pip antiword python3-poppler-qt5 python3-qpageview gstreamer1-plugin-libav gstreamer1-plugin-openh264
+
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract

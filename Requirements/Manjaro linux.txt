@@ -1,0 +1,5 @@
+sudo pacman -S python-pyqt5 python-poppler-qt5  python-pip  python-qpageview antiword
+
+yay -S python-pyexcel python-pyexcel-xls python-pyexcel-xlsx
+
+pip install textract --break-system-packages
