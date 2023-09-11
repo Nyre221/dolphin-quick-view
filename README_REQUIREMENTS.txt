@@ -23,14 +23,14 @@ pip install pyexcel pyexcel-xls pyexcel-xlsx textract
 
 
 fedora 38
-sudo dnf install python3-qt5 python3-pip antiword python3-poppler-qt5  gstreamer1-plugin-libav gstreamer1-plugin-openh264
+sudo dnf install python3-qt5 python3-pip antiword python3-poppler-qt5 python3-qpageview gstreamer1-plugin-libav gstreamer1-plugin-openh264
 pip install pyexcel pyexcel-xls pyexcel-xlsx
 pip install textract
 
 
 
 manjaro:
-sudo pacman -S python-pyqt5 python-poppler-qt5  python-pip  qpageview antiword
+sudo pacman -S python-pyqt5 python-poppler-qt5  python-pip  python-qpageview antiword
 yay -S python-pyexcel python-pyexcel-xls python-pyexcel-xlsx
 pip install textract --break-system-packages
 

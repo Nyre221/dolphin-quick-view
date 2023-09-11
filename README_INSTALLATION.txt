@@ -1,4 +1,4 @@
-installation:
+Installation:
 1: Install the dependencies (README_REQUIREMENTS.txt)
 2: make the "INSTALL.sh" file executable (right click-> properties->check "executable") and run it
 3: go to plasma settings -> shortcuts -> add a shortcut that executes a command: /home/YOUR_USERNAME/.config/quick_view/dolphin_quick_view_shortcut.sh 
@@ -7,13 +7,13 @@ installation:
 
 Common Quick view shortcuts:
 a,b and arrow keys = back and forward
-spacebar = open with default app
-q = quit
+spacebar, q and ESC = quit
+w and arrow up key = open with default app
 
 
 
 
-DEBUG:
+Debug:
 If quick view doesn't open via dolphin's dropdown menu:
 open a terminal and type "dolphin", error messages will appear in the terminal window (possible missing dependencies)
 
