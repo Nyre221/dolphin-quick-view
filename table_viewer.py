@@ -1,9 +1,9 @@
 import pyexcel
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 
-class Table_viewer(QTableWidget):
+class TableViewer(QTableWidget):
     def __init__(self, parent = None):
-        super(Table_viewer,self).__init__(parent)
+        super(TableViewer,self).__init__(parent)
         self.setFocus()
 
         

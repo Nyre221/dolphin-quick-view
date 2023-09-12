@@ -5,10 +5,10 @@ from PyQt5.QtCore import Qt,QUrl
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 
-class VideoPlayer(QWidget):
+class VideoViewer(QWidget):
 
     def __init__(self, parent=None):
-        super(VideoPlayer, self).__init__(parent)
+        super(VideoViewer, self).__init__(parent)
         self.setFocus()
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         videoWidget = QVideoWidget()

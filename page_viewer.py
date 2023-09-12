@@ -1,8 +1,8 @@
 import qpageview
 
-class Viewer(qpageview.View):
+class PageViewer(qpageview.View):
     def __init__(self, parent=None):
-        super(Viewer,self).__init__(parent)
+        super(PageViewer,self).__init__(parent)
         self.setFocus()
 
 
