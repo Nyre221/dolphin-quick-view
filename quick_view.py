@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHB
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 # import viewers
-import Page_viewer
-import Text_viewer
-import Table_viewer
-import Video_viewer
+from page_viewer import PageViewer
+from text_viewer import TextViewer
+from table_viewer import TableViewer
+from video_viewer import VideoViewer
 # other
 from glob import glob
 import textract
@@ -185,7 +185,7 @@ class Main(QMainWindow):
 
     def load_table_viewer(self, path):
         if self.table_viewer is None:
-            self.table_viewer = Table_viewer.Table_viewer(self)
+            self.table_viewer = TableViewer(self)
             self.add_widget(self.table_viewer)
 
         self.table_viewer.load_file(path)
@@ -193,7 +193,7 @@ class Main(QMainWindow):
 
     def load_text_viewer(self, text, markdown=False):
         if self.text_viewer is None:
-            self.text_viewer = Text_viewer.Text_viewer(self)
+            self.text_viewer = TextViewer(self)
             self.add_widget(self.text_viewer)
 
             font = QFont("Monospace")
@@ -212,7 +212,7 @@ class Main(QMainWindow):
 
     def load_video_viewer(self, path):
         if self.media_player is None:
-            self.media_player = Video_viewer.VideoPlayer(self)
+            self.media_player = VideoViewer(self)
             self.add_widget(self.media_player)
 
         self.media_player.open(path)
@@ -220,7 +220,7 @@ class Main(QMainWindow):
 
     def load_page_viewer(self, path, _type):
         if self.page_viewer is None:
-            self.page_viewer = Page_viewer.Viewer(self)
+            self.page_viewer = PageViewer(self)
             self.add_widget(self.page_viewer)
 
         if _type == "pdf":
