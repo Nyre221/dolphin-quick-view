@@ -3,7 +3,7 @@ import sys
 
 # Adhere to naming conventions: https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html
 
-# Call the module like this: name_viewer.py (all lowercase)
+# Name the module like this: name_viewer.py (all lowercase)
 # I chose this way of naming the modules to avoid using a name already in use.
 
 class ClassExample(QWidget):
