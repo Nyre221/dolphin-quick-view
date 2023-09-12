@@ -1,8 +1,15 @@
 #!/bin/bash
-# clears clipboard
+
+# Get out of here if dbus-send is not available
+if command -v dbus-send >/dev/null 2>&1; then
+    # dbus-send is installed, proceed
+    :
+else
+echo -e "dbus-send not found.\nClosing..."
+exit 1
+fi
 
 original_clipboard_content="$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.getClipboardContents | grep string | cut -d'"' -f2)"
-echo "$original_clipboard_content"
 sleep 0.1
 # "clear" the clipboard.
 # by using setClipboardContents the clipboard history is not cancelled and the last copied element can be restored later.
@@ -43,7 +50,7 @@ path=$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipp
 #deselect what was previously selected (aesthetic reason)
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/invert_selection org.qtproject.Qt.QAction.trigger
 
-#if the file is a folder, go back one folder. 
+#if the file is a folder, go back one folder.
 #this is necessary because dolphin can also copy the location of a folder and the python program would show the contents of that folder and not the current one.
 #(This part of code runs only if no specific file was selected.)
 if [[ -d "$path" ]]; then
