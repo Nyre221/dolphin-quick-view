@@ -1,3 +1,6 @@
-sudo dnf install python3-qt5 python3-pip antiword python3-poppler-qt5 python3-qpageview gstreamer1-plugin-libav gstreamer1-plugin-openh264 libjpeg-devel ibjpeg-turbo-devel
+REQUIRED:
+sudo dnf install python3-qt5  antiword python3-poppler-qt5  gstreamer1-plugin-libav gstreamer1-plugin-openh264 libjpeg-devel libjpeg-turbo-devel
 
+NOT REQUIRED FOR RELEASE VERSION:
+sudo dnf install python3-pip python3-qpageview
 pip install pyexcel pyexcel-xls pyexcel-xlsx textract
