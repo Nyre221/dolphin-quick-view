@@ -3,8 +3,8 @@
 # import QT
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStyle, \
     QSizePolicy, QLabel , QShortcut
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QKeyEvent
+from PyQt5.QtCore import Qt,QEvent
 # import viewers
 from page_viewer import PageViewer
 from text_viewer import TextViewer
@@ -190,6 +190,8 @@ class Main(QMainWindow):
 
         self.table_viewer.load_file(path)
         self.table_viewer.show()
+        self.table_viewer.setFocus()
+        
 
     def load_text_viewer(self, text, markdown=False):
         if self.text_viewer is None:
@@ -209,6 +211,7 @@ class Main(QMainWindow):
             self.text_viewer.setText(text)
 
         self.text_viewer.show()
+        self.text_viewer.setFocus()
 
     def load_video_viewer(self, path):
         if self.media_player is None:
@@ -246,6 +249,7 @@ class Main(QMainWindow):
         #         self.page_viewer.img_mode()
 
         self.page_viewer.show()
+        self.page_viewer.setFocus()
 
     def add_widget(self, widget):
         self.viewer_container_layout.addWidget(widget)
@@ -270,9 +274,12 @@ class Main(QMainWindow):
             self.current_index = self.current_index + 1
         self.load_file_at_index(self.current_index)
 
+
     def hide_widgets(self):
         for w in self.added_widgets:
             w.hide()
+
+
 
     def set_shortcut(self):
         for shortcut_close in ["q", Qt.Key_Escape, Qt.Key_Space]:
@@ -284,9 +291,21 @@ class Main(QMainWindow):
         for shortcut_forward in ["d", Qt.Key_Right]:
             QShortcut(shortcut_forward, self).activated.connect(self.forward)
 
-        for shortcut_open in ["w", Qt.Key_Up]:
+        for shortcut_open in [Qt.Key_Tab,Qt.Key_Return]:
             QShortcut(shortcut_open, self).activated.connect(self.open_with_app)
 
+        # crude way of binding one key to another.        
+        # I've bound the "w" and "s" keys to the arrow keys so I don't have to write methods for each class.
+        QShortcut(str("w"), self).activated.connect(lambda: self.send_key_press(Qt.Key_Up))
+        QShortcut(str("s"), self).activated.connect(lambda: self.send_key_press(Qt.Key_Down))
+
+
+    # sends key press event to active viewer.
+    # I used it to bind the "w" and "s" keys to the arrow keys.
+    def send_key_press(self,key):
+        for viewer in self.added_widgets:
+            if viewer.isVisible:
+                QApplication.postEvent(viewer, QKeyEvent(QEvent.KeyPress,key,Qt.NoModifier))
 
 def launch():
     app = QApplication(sys.argv)
