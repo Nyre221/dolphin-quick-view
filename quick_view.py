@@ -25,9 +25,9 @@ class Main(QMainWindow):
         self.app = app
 
         # a way to access and check if the widget has been created
-        self.added_widgets = []
+        self.added_viewers = []
         self.page_viewer = None
-        self.media_player = None
+        self.video_viewer = None
         self.text_viewer = None
         self.table_viewer = None
 
@@ -74,7 +74,7 @@ class Main(QMainWindow):
         # file not supported label (just repeat the name for now)
         self.error_label = QLabel()
         # adds the label to the list of added widgets so that it disappears automatically when you select another file.
-        self.added_widgets.append(self.error_label)
+        self.added_viewers.append(self.error_label)
         font = QFont("Monospace")
         font.setPointSize(15)
 
@@ -160,28 +160,28 @@ class Main(QMainWindow):
             self.error_label.setText(os.path.basename(self.current_file))
             self.error_label.show()
 
-    # to extend compatibility I used an if ladder, in the future I will remove it.
-    # (needs to be updated)
-    # match extension:
-    #     case  ".pdf":
-    #         self.load_page_viewer(self.current_file,"pdf")
-    #     case f if f in [".png",".jpeg",".jpg"]:
-    #         self.load_page_viewer(self.current_file,"img")
-    #     case ".svg":
-    #         self.load_page_viewer(self.current_file,"svg")
-    #     case f if f in [".mp4",".mp3"]:
-    #         self.load_video_viewer(self.current_file)
-    #     case f if f in [".doc",".docx",".odt",".txt"]:
-    #         text = textract.process(self.current_file).decode("utf-8")
-    #         self.load_text_viewer(text)
-    #     case f if f in [".xml",".html"]:
-    #         with open(self.current_file,"r") as f:
-    #              self.load_text_viewer(f.read())
-    #     case f if f in [".ods",".xlsx",".xls",".csv"]:
-    #         self.load_table_viewer(self.current_file)
-    #     case _:
-    #         self.error_label.setText(os.path.basename(self.current_file))
-    #         self.error_label.show()
+        # to extend compatibility I used an if ladder, in the future I will remove it.
+        # (needs to be updated)
+        # match extension:
+        #     case  ".pdf":
+        #         self.load_page_viewer(self.current_file,"pdf")
+        #     case f if f in [".png",".jpeg",".jpg"]:
+        #         self.load_page_viewer(self.current_file,"img")
+        #     case ".svg":
+        #         self.load_page_viewer(self.current_file,"svg")
+        #     case f if f in [".mp4",".mp3"]:
+        #         self.load_video_viewer(self.current_file)
+        #     case f if f in [".doc",".docx",".odt",".txt"]:
+        #         text = textract.process(self.current_file).decode("utf-8")
+        #         self.load_text_viewer(text)
+        #     case f if f in [".xml",".html"]:
+        #         with open(self.current_file,"r") as f:
+        #              self.load_text_viewer(f.read())
+        #     case f if f in [".ods",".xlsx",".xls",".csv"]:
+        #         self.load_table_viewer(self.current_file)
+        #     case _:
+        #         self.error_label.setText(os.path.basename(self.current_file))
+        #         self.error_label.show()
 
     def load_table_viewer(self, path):
         if self.table_viewer is None:
@@ -192,7 +192,6 @@ class Main(QMainWindow):
         self.table_viewer.show()
         self.table_viewer.setFocus()
         
-
     def load_text_viewer(self, text, markdown=False):
         if self.text_viewer is None:
             self.text_viewer = TextViewer(self)
@@ -214,12 +213,12 @@ class Main(QMainWindow):
         self.text_viewer.setFocus()
 
     def load_video_viewer(self, path):
-        if self.media_player is None:
-            self.media_player = VideoViewer(self)
-            self.add_widget(self.media_player)
+        if self.video_viewer is None:
+            self.video_viewer = VideoViewer(self)
+            self.add_widget(self.video_viewer)
 
-        self.media_player.open(path)
-        self.media_player.show()
+        self.video_viewer.open(path)
+        self.video_viewer.show()
 
     def load_page_viewer(self, path, _type):
         if self.page_viewer is None:
@@ -253,7 +252,7 @@ class Main(QMainWindow):
 
     def add_widget(self, widget):
         self.viewer_container_layout.addWidget(widget)
-        self.added_widgets.append(widget)
+        self.added_viewers.append(widget)
 
     def open_with_app(self):
         subprocess.run(["xdg-open", self.current_file])
@@ -274,12 +273,9 @@ class Main(QMainWindow):
             self.current_index = self.current_index + 1
         self.load_file_at_index(self.current_index)
 
-
     def hide_widgets(self):
-        for w in self.added_widgets:
+        for w in self.added_viewers:
             w.hide()
-
-
 
     def set_shortcut(self):
         for shortcut_close in ["q", Qt.Key_Escape, Qt.Key_Space]:
@@ -299,11 +295,10 @@ class Main(QMainWindow):
         QShortcut(str("w"), self).activated.connect(lambda: self.send_key_press(Qt.Key_Up))
         QShortcut(str("s"), self).activated.connect(lambda: self.send_key_press(Qt.Key_Down))
 
-
-    # sends key press event to active viewer.
-    # I used it to bind the "w" and "s" keys to the arrow keys.
     def send_key_press(self,key):
-        for viewer in self.added_widgets:
+        # sends key press event to active viewer.
+        # I used it to bind the "w" and "s" keys to the arrow keys.
+        for viewer in self.added_viewers:
             if viewer.isVisible:
                 QApplication.postEvent(viewer, QKeyEvent(QEvent.KeyPress,key,Qt.NoModifier))
 
