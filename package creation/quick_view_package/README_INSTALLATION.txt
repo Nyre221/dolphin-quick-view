@@ -6,7 +6,7 @@ Installation:
 3: If you want to open it with a shortcut and not just via dolphin's context menu: go to plasma settings -> shortcuts -> add a shortcut that executes a command: /home/YOUR_USERNAME/.config/quick_view/dolphin_quick_view_shortcut.sh (you can activate the shortcut as you want)
 
 Common Quick view shortcuts:
-a,b and arrow keys (right/left) = back and forward
+a,d and arrow keys (right/left) = back and forward
 w,s and arrow keys (down/up) = scroll
 spacebar, q and ESC = quit
 tab and return key = open with default app
