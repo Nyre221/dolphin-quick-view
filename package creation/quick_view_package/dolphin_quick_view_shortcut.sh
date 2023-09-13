@@ -14,7 +14,7 @@ sleep 0.1
 # "clear" the clipboard.
 # by using setClipboardContents the clipboard history is not cancelled and the last copied element can be restored later.
 dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.setClipboardContents string:" "
-
+[ "$?" != "0" ] && exit 1
 #search for the process of dolphin
 windows=$(qdbus | grep -i dolphin)
 dolphin=""
@@ -23,7 +23,7 @@ dolphin=""
 for w in $windows; do
 
 is_active_window=$(dbus-send --session --print-reply --type=method_call --dest=$w /dolphin/Dolphin_1 org.kde.dolphin.MainWindow.isActiveWindow)
-
+[ "$?" != "0" ] && exit 1
 [ "$( echo $is_active_window | grep -i true)" ] &&  dolphin="$w"
 
 done
@@ -33,9 +33,11 @@ done
 
 #sends the signal to dolphin to copy the location of the current file to the clipboard.
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/copy_location org.qtproject.Qt.QAction.trigger
+[ "$?" != "0" ] && exit 1
 sleep 0.1
 #gets clipboard contents from klipper
 path="$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.getClipboardContents | grep string | cut -d'"' -f2)"
+[ "$?" != "0" ] && exit 1
 
 
 #if the path is invalid, sends the signal to select all files and sends the signal to copy the location again.
@@ -43,12 +45,16 @@ path="$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klip
 if [ ! -e "$path" ]; then
 
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/edit_select_all org.qtproject.Qt.QAction.trigger
+[ "$?" != "0" ] && exit 1
 sleep 0.1
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/copy_location org.qtproject.Qt.QAction.trigger
+[ "$?" != "0" ] && exit 1
 sleep 0.1
 path=$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.getClipboardContents | grep string | cut -d'"' -f2)
+[ "$?" != "0" ] && exit 1
 #deselect what was previously selected (aesthetic reason)
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/invert_selection org.qtproject.Qt.QAction.trigger
+[ "$?" != "0" ] && exit 1
 
 #if the file is a folder, go back one folder.
 #this is necessary because dolphin can also copy the location of a folder and the python program would show the contents of that folder and not the current one.
