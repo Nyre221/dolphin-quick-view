@@ -43,4 +43,6 @@ I created a module called "example_module.py", download it and try to create a n
 The module can be run separately and you don't need to download all the project files.  
 To start using it you just need to install python-pyqt5 for your distro: https://github.com/Nyre221/dolphin-quick-view/tree/main/Requirements
 
+example module:https://github.com/Nyre221/dolphin-quick-view/blob/main/example_module.py
+
 ## Support me: https://www.paypal.com/donate/?hosted_button_id=J7QU55MMUP4G4
