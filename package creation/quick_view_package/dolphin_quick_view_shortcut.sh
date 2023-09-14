@@ -9,7 +9,7 @@ echo -e "dbus-send not found.\nClosing..."
 exit 1
 fi
 
-original_clipboard_content="$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.getClipboardContents | grep -v "method return time=" | sed -r '1s/^\s+//g' | sed ' s/^`string "//' | sed '$ s/"$//')"
+original_clipboard_content="$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.getClipboardContents | grep -v "method return time=" | sed -r '1s/^\s+//g' | sed ' s/^string "//' | sed '$ s/"$//')"
 sleep 0.1
 # "clear" the clipboard.
 # by using setClipboardContents the clipboard history is not cancelled and the last copied element can be restored later.
