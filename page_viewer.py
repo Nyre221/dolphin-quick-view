@@ -3,7 +3,7 @@ import qpageview
 class PageViewer(qpageview.View):
     def __init__(self, parent=None):
         super(PageViewer,self).__init__(parent)
-        self.setFocus()
+        self.verticalScrollBar().setSingleStep(50)
 
 
         
