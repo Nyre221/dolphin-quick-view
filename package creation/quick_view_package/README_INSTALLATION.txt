@@ -7,9 +7,9 @@ Installation:
 
 Common Quick view shortcuts:
 a,d and arrow keys (right/left) = back and forward
-w,s and arrow keys (down/up) = scroll
+arrow keys (down/up) = scroll
 spacebar, q and ESC = quit
-tab and return key = open with default app
+"w" and return key = open with default app
 
 
 
@@ -20,7 +20,7 @@ open a terminal and type "dolphin", error messages will appear in the terminal w
 
 if dolphin_quick_view_shortcut.sh doesn't work, run: "sleep 5 ; ~/.config/quick_view/dolphin_quick_view_shortcut.sh" in a terminal and reactivate a dolphin window.
 (you have 5 seconds). The errors should appear there.
-alternatively you can use this command: ~/.config/quick_view/quick_view.pyz /path/to/some/file
+alternatively you can use this command: ~/.config/quick_view/quick_view.pyz /path/to/some/file -s
 
 if the pdfs are not visible it is because you have not installed python3-qpageview or python3-poppler-qt5 (names may differ a bit)
 

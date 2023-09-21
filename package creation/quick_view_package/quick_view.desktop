@@ -1,12 +1,12 @@
 [Desktop Action default_action]
-Exec=$HOME/.config/quick_view/quick_view.pyz %F
+Exec=$HOME/.config/quick_view/quick_view.pyz %F "-a"
 Icon=quickview
 Name=Quick View
 Name[it]=Anteprima Rapida
 
 [Desktop Entry]
 Actions=default_action;
-Exec=$HOME/.config/quick_view/quick_view.pyz %F
+Exec=$HOME/.config/quick_view/quick_view.pyz %F "-a"
 Icon=quickview
 MimeType=all/all;
 Name=Quick View
