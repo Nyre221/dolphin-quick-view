@@ -198,7 +198,7 @@ class ContainerViewer(QWidget):
 
         # create the object for qlistwidget.
         for file in ordered_files:
-            if thread_id is not self.current_thread_id or self.isHidden():
+            if thread_id is not self.current_thread_id:
                 # exits if the id has changed (this happens when the user changes files).
                 exit()
             # gets the icon appropriate for the file type.
@@ -220,7 +220,7 @@ class ContainerViewer(QWidget):
             zip_infolist = zip_ref.infolist()
         # gets a list of the files and create the object for qlistwidget.
         for file in  zip_infolist:
-            if thread_id is not self.current_thread_id or self.isHidden():
+            if thread_id is not self.current_thread_id:
                 # exits if the id has changed (this happens when the user changes files).
                 exit()
             if not file.is_dir():
@@ -244,7 +244,7 @@ class ContainerViewer(QWidget):
             rar_infolist = rar_ref.infolist()
         # gets a list of the files and create the object for qlistwidget.
         for file in rar_infolist:
-            if thread_id is not self.current_thread_id or self.isHidden():
+            if thread_id is not self.current_thread_id:
                 # exits if the id has changed (this happens when the user changes files).
                 exit()
             if not file.is_dir():
@@ -268,7 +268,7 @@ class ContainerViewer(QWidget):
             tar_infolist = tar_ref.getmembers()
         # gets a list of the files and create the object for qlistwidget.
         for file in tar_infolist:
-            if thread_id is not self.current_thread_id or self.isHidden():
+            if thread_id is not self.current_thread_id:
                 # exits if the id has changed (this happens when the user changes files).
                 exit()
             if not file.isdir():
@@ -394,7 +394,7 @@ class ContainerViewer(QWidget):
                 # adds the size of each file to the size variable
                 for subfolder_path, dirs, files in os.walk(path):
                     for f in files:
-                        if thread_id is not self.current_thread_id or self.isHidden():
+                        if thread_id is not self.current_thread_id:
                             # exits if the id has changed (this happens when the user changes files).
                             exit()
                         subfile_path = os.path.join(subfolder_path, f)
