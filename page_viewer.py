@@ -13,3 +13,7 @@ class PageViewer(qpageview.View):
 
     def img_mode(self):
         self.setViewMode(qpageview.FitBoth)
+
+    def hide(self) -> None:
+        self.clear()
+        return super().hide()
