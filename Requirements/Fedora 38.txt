@@ -3,4 +3,4 @@ sudo dnf install python3-qt5  antiword python3-poppler-qt5  gstreamer1-plugin-li
 
 NOT REQUIRED FOR RELEASE VERSION:
 sudo dnf install python3-pip python3-qpageview
-pip install pyexcel pyexcel-xls pyexcel-xlsx textract
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract rarfile pyexcel-ods pyexcel-ods3 pyexcel-odsr

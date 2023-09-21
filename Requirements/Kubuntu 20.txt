@@ -3,4 +3,4 @@ sudo apt install  python3-pyqt5.qtsvg  python3-pyqt5.qtmultimedia antiword  pyth
 
 NOT REQUIRED FOR RELEASE VERSION:
 sudo apt install python3-qpageview python3-pip
-pip install pyexcel pyexcel-xls pyexcel-xlsx textract
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract rarfile pyexcel-ods pyexcel-ods3 pyexcel-odsr

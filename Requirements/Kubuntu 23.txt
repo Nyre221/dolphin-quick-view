@@ -4,4 +4,4 @@ sudo apt install python3-pyqt5.qtmultimedia python3-poppler-qt5 antiword gstream
 
 NOT REQUIRED FOR RELEASE VERSION:
 sudo apt install python3-pip python3-qpageview
-pip install pyexcel pyexcel-xls pyexcel-xlsx textract --break-system-packages
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract rarfile pyexcel-ods pyexcel-ods3 pyexcel-odsr --break-system-packages
