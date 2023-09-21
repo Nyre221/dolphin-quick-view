@@ -395,24 +395,11 @@ class Main(QMainWindow):
         for shortcut_forward in ["d", Qt.Key_Right]:
             QShortcut(shortcut_forward, self).activated.connect(self.forward)
 
-        for shortcut_open in [Qt.Key_Tab, Qt.Key_Return]:
+        for shortcut_open in ["w", Qt.Key_Return]:
             QShortcut(shortcut_open, self).activated.connect(
                 self.open_with_app)
 
-        # crude way of binding one key to another.
-        # I've bound the "w" and "s" keys to the arrow keys so I don't have to write methods for each class.
-        QShortcut(str("w"), self).activated.connect(
-            lambda: self.send_key_press(Qt.Key_Up))
-        QShortcut(str("s"), self).activated.connect(
-            lambda: self.send_key_press(Qt.Key_Down))
 
-    def send_key_press(self, key, repetition=1):
-        # sends key press event to active viewer.
-        # I used it to bind the "w" and "s" keys to the arrow keys.
-        for viewer in self.added_viewers:
-            if viewer.isVisible:
-                QApplication.postEvent(viewer, QKeyEvent(
-                    QEvent.KeyPress, key, Qt.NoModifier))
 
 
 def launch():
