@@ -1,12 +1,12 @@
 [Desktop Action default_action]
-Exec=$HOME/.config/quick_view/quick_view.pyz %F "-a"
+Exec=$HOME/.config/quick_view/dolphin_quick_view_shortcut.sh
 Icon=quickview
 Name=Quick View
 Name[it]=Anteprima Rapida
 
 [Desktop Entry]
 Actions=default_action;
-Exec=$HOME/.config/quick_view/quick_view.pyz %F "-a"
+Exec=$HOME/.config/quick_view/dolphin_quick_view_shortcut.sh
 Icon=quickview
 MimeType=all/all;
 Name=Quick View
