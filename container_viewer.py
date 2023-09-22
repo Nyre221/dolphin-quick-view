@@ -16,10 +16,14 @@ class ContainerViewer(QWidget):
 
     def __init__(self, parent=None):
         super(ContainerViewer, self).__init__(parent)
+        #5GB. is used to determine whether the archive should be opened and its contents shown.
+        self.maximum_archive_size = 5368709120
+        # used to determine if threads are still needed.
+        self.is_active_viewer = False
         # is used to discard a thread no longer needed.
         self.current_thread_id = 0
-        #
-        self.logo_size = QApplication.primaryScreen().size()*0.22
+        #the size to use for the image.
+        self.logo_size = QApplication.primaryScreen().size()*0.125
         # preloads the icons to use in the listwidget.
         self.__preload_icons__()
         # file type logo/img
@@ -27,7 +31,7 @@ class ContainerViewer(QWidget):
 
         # set the size of the logo if the class is opened by its own script (for testing).
         if parent is None:
-            self.logo_img.setPixmap(QPixmap("/usr/share/icons/breeze-dark/mimetypes/64/application-zip.svg").scaled(self.logo_size, Qt.KeepAspectRatio))
+            self.logo_img.setPixmap(QPixmap("/usr/share/icons/breeze-dark/mimetypes/64/application-zip.svg").scaled(self.logo_size, Qt.KeepAspectRatioByExpanding))
 
         # fonts
         # name font
@@ -48,7 +52,6 @@ class ContainerViewer(QWidget):
         self.label_name.setText("Name")
         self.label_name.setFont(self.font_label_name)
         self.label_name.setAlignment(Qt.AlignCenter)
-        self.label_name.setWordWrap(True)
         # needed to elide the text of the name
         self.name_font_metrics = QFontMetrics(self.font_label_name)
 
@@ -117,6 +120,8 @@ class ContainerViewer(QWidget):
         self.main_layout.addWidget(self.list_widget)
 
     def load_file(self, path):
+        # to stop the thread if it is no longer the active viewer.
+        self.is_active_viewer = True
         th = None
         # so the arrow keys can scroll through the items in the list.
         self.list_widget.setFocus()
@@ -132,35 +137,37 @@ class ContainerViewer(QWidget):
         # load the placeholder text as it may take time to load the new data.
         self.__set_placeholder_text__()
 
+        
         # use the correct function for the file type.
         extension = os.path.splitext(path.lower())[-1]
         if os.path.isdir(path):
             # change the logo image to match the file type.
             self.__set_logo_icon__("/usr/share/icons/breeze/places/96/folder.svg")
-            # prepare to start the function in another process to avoid slowdowns.
+            # prepare to start the function in another thread to avoid slowdowns.
             th = Thread(target=self.__load_folder__, args=([path]))
         elif extension in ".zip":
             # change the logo image to match the file type.
             self.__set_logo_icon__(
                 "/usr/share/icons/breeze-dark/mimetypes/64/application-zip.svg")
-            # prepare to start the function in another process to avoid slowdowns.
+            # prepare to start the function in another thread to avoid slowdowns.
             th = Thread(target=self.__load_zip__, args=([path]))
         elif extension in ".rar":
             # change the logo image to match the file type.
             self.__set_logo_icon__(
                 "/usr/share/icons/breeze-dark/mimetypes/64/application-zip.svg")
-            # prepare to start the function in another process to avoid slowdowns.
+            # prepare to start the function in another thread to avoid slowdowns.
             th = Thread(target=self.__load_rar__, args=([path]))
         elif extension in [".gz", ".xz"]:
             # change the logo image to match the file type.
             self.__set_logo_icon__(
                 "/usr/share/icons/breeze-dark/mimetypes/64/application-zip.svg")
-            # prepare to start the function in another process to avoid slowdowns.
+            # prepare to start the function in another thread to avoid slowdowns.
             th = Thread(target=self.__load_tar__, args=([path]))
         else:
             print("container viewer:File not supported")
             return
 
+        
 
         # allows closing the application even if the thread has not finished
         th.setDaemon(True)
@@ -198,8 +205,8 @@ class ContainerViewer(QWidget):
 
         # create the object for qlistwidget.
         for file in ordered_files:
-            if thread_id is not self.current_thread_id:
-                # exits if the id has changed (this happens when the user changes files).
+            if not self.__continue_thread_execution__(thread_id):
+               # not needed, exit
                 exit()
             # gets the icon appropriate for the file type.
             icon = self.__list_icon_chooser__(file, is_folder=os.path.isdir(file))
@@ -216,12 +223,23 @@ class ContainerViewer(QWidget):
         thread_id = self.current_thread_id
         items = []
         files_list = []
+
+        # avoid opening the archive if it is too large.
+        if os.stat(path).st_size > self.maximum_archive_size:
+            # adds an item to let the user know that the content will not be shown.
+            self.__set_list_widget_items__([QListWidgetItem("Preview not available: the file is too large.")])
+            self.__set_labels_text__(file_count="Unknown")
+            exit()
+        # check if the thread is still needed.
+        if not self.__continue_thread_execution__(thread_id):
+                    #not needed,exit
+                    exit()
         with zipfile.ZipFile(path, "r") as zip_ref:
             zip_infolist = zip_ref.infolist()
         # gets a list of the files and create the object for qlistwidget.
         for file in  zip_infolist:
-            if thread_id is not self.current_thread_id:
-                # exits if the id has changed (this happens when the user changes files).
+            if not self.__continue_thread_execution__(thread_id):
+                # not needed, exit
                 exit()
             if not file.is_dir():
                 # gets the icon appropriate for the file type.
@@ -240,12 +258,24 @@ class ContainerViewer(QWidget):
         thread_id = self.current_thread_id
         items = []
         files_list = []
+
+        # avoid opening the archive if it is too large.
+        if os.stat(path).st_size > self.maximum_archive_size:
+            # adds an item to let the user know that the content will not be shown.
+            self.__set_list_widget_items__([QListWidgetItem("Preview not available: the file is too large.")])
+            self.__set_labels_text__(file_count="Unknown")
+            exit()
+        # check if the thread is still needed.
+        if not self.__continue_thread_execution__(thread_id):
+                    #not needed,exit
+                    exit()
+
         with rarfile.RarFile(path, "r") as rar_ref:
             rar_infolist = rar_ref.infolist()
         # gets a list of the files and create the object for qlistwidget.
         for file in rar_infolist:
-            if thread_id is not self.current_thread_id:
-                # exits if the id has changed (this happens when the user changes files).
+            if not self.__continue_thread_execution__(thread_id):
+                # not needed, exit
                 exit()
             if not file.is_dir():
                 # gets the icon appropriate for the file type.
@@ -264,12 +294,24 @@ class ContainerViewer(QWidget):
         thread_id = self.current_thread_id
         items = []
         files_list = []
+
+        # avoid opening the archive if it is too large.
+        if os.stat(path).st_size > self.maximum_archive_size:
+            # adds an item to let the user know that the content will not be shown.
+            self.__set_list_widget_items__([QListWidgetItem("Preview not available: the file is too large.")])
+            self.__set_labels_text__(file_count="Unknown")
+            exit()
+        # check if the thread is still needed.
+        if not self.__continue_thread_execution__(thread_id):
+                    #not needed,exit
+                    exit()
+
         with tarfile.open(path,"r") as tar_ref:
             tar_infolist = tar_ref.getmembers()
         # gets a list of the files and create the object for qlistwidget.
         for file in tar_infolist:
-            if thread_id is not self.current_thread_id:
-                # exits if the id has changed (this happens when the user changes files).
+            if not self.__continue_thread_execution__(thread_id):
+                # not needed, exit
                 exit()
             if not file.isdir():
                 # gets the icon appropriate for the file type.
@@ -357,14 +399,14 @@ class ContainerViewer(QWidget):
         return icon
 
     def __set_logo_icon__(self, path):
-        icon = QPixmap(path).scaled(self.logo_size, Qt.KeepAspectRatio)
+        icon = QPixmap(path).scaled(self.logo_size, Qt.KeepAspectRatioByExpanding)
         self.logo_img.setPixmap(icon)
 
     def __set_labels_text__(self, name=None, last_modified=None, size=None, size_unit="?", file_count=None):
         if name:
             # sets the text and elides it if necessary.
             self.label_name.setText(self.name_font_metrics.elidedText(
-                name, Qt.ElideMiddle,self.logo_size.width()))
+                name, Qt.ElideMiddle,int(self.logo_size.width())))
         if last_modified:
             self.label_modified_date_value.setText(last_modified)
         if size is not None:
@@ -394,7 +436,7 @@ class ContainerViewer(QWidget):
                 # adds the size of each file to the size variable
                 for subfolder_path, dirs, files in os.walk(path):
                     for f in files:
-                        if thread_id is not self.current_thread_id:
+                        if thread_id is not self.current_thread_id or not self.is_active_viewer:
                             # exits if the id has changed (this happens when the user changes files).
                             exit()
                         subfile_path = os.path.join(subfolder_path, f)
@@ -440,6 +482,18 @@ class ContainerViewer(QWidget):
         # adds an element to qlistwidget to indicate that the files are loading.
         self.list_widget.addItem(ph+"...")
 
+    def hide(self) -> None:
+        # to stop the thread if it is no longer the active viewer.
+        self.is_active_viewer = False
+        return super().hide()
+
+    def __continue_thread_execution__(self,thread_id):
+        # check if the thread is still needed.
+        if thread_id is self.current_thread_id and self.is_active_viewer:
+            #needed, returns true.
+            return True
+        else:
+            return False
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

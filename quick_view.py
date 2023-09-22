@@ -177,9 +177,10 @@ class Main(QMainWindow):
             self.container_viewer = ContainerViewer(self)
             # adds the widget to its container.
             self.add_widget(self.container_viewer)
-
-        self.container_viewer.load_file(path)
+        
         self.container_viewer.show()
+        self.container_viewer.load_file(path)
+
 
     def load_table_viewer(self, path):
         if self.table_viewer is None:
@@ -267,31 +268,32 @@ class Main(QMainWindow):
             # set the index at the current file
             self.current_index = self.files.index(self.current_file)
 
-        elif args_count > 2 and sys.argv[-1] == "-a":
-            # activated by the dophin action in the dropdown menu
-            # this is necessary because the actions in the dolphin menu have no way of knowing
-            # whether the selected one is the parent folder or a subfolder.
-            if os.path.isfile(argv_path):
-                # if a file was selected
-                # current file is selected file
-                self.current_file = argv_path
-                # current path is the parent folder
-                self.current_path = os.path.dirname(self.current_file)
-                # search for files
-                self.files = glob(f"{self.current_path}/*")
-                self.files = self.sort_files(self.files)
-                # set the index at the current file
-                self.current_index = self.files.index(self.current_file)
-            elif os.path.isdir(argv_path):
-                # if a folder was selected
-                # current path is the selected folder
-                self.current_path = argv_path
-                # search for files in the selected folder
-                self.files = glob(f"{self.current_path}/*")
-                self.files = self.sort_files(self.files)
-                # choose a random file or folder.
-                self.current_file = self.files[0]
-                self.current_index = 0
+        # elif args_count > 2 and sys.argv[-1] == "-a":
+        ##### NOT NEEDED ANYMORE: the action in the dolphin menu calls the shortcut and no longer quickview.
+        #     # activated by the dophin action in the dropdown menu
+        #     # this is necessary because the actions in the dolphin menu have no way of knowing
+        #     # whether the selected one is the parent folder or a subfolder.
+        #     if os.path.isfile(argv_path):
+        #         # if a file was selected
+        #         # current file is selected file
+        #         self.current_file = argv_path
+        #         # current path is the parent folder
+        #         self.current_path = os.path.dirname(self.current_file)
+        #         # search for files
+        #         self.files = glob(f"{self.current_path}/*")
+        #         self.files = self.sort_files(self.files)
+        #         # set the index at the current file
+        #         self.current_index = self.files.index(self.current_file)
+        #     elif os.path.isdir(argv_path):
+        #         # if a folder was selected
+        #         # current path is the selected folder
+        #         self.current_path = argv_path
+        #         # search for files in the selected folder
+        #         self.files = glob(f"{self.current_path}/*")
+        #         self.files = self.sort_files(self.files)
+        #         # choose a random file or folder.
+        #         self.current_file = self.files[0]
+        #         self.current_index = 0
         else:
             # if the shortcut was used and no file was selected.
             # current file is the parent folder
