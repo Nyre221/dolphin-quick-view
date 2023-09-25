@@ -12,7 +12,6 @@ from video_viewer import VideoViewer
 from container_viewer import ContainerViewer
 # other
 from glob import glob
-import textract
 import subprocess
 import sys
 import os
