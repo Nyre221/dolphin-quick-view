@@ -2,14 +2,15 @@
 
 # import QT
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStyle, \
-    QSizePolicy, QLabel, QShortcut
-from PyQt5.QtGui import QFont, QKeyEvent
-from PyQt5.QtCore import Qt, QEvent
+    QSizePolicy, QShortcut
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 # import viewers
 from page_viewer import PageViewer
 from text_viewer import TextViewer
 from video_viewer import VideoViewer
 from container_viewer import ContainerViewer
+from fallback_viewer import FallbackViewer
 # other
 from glob import glob
 import subprocess
@@ -28,6 +29,7 @@ class Main(QMainWindow):
         # a way to access and check if the widget has been created
         self.added_viewers = []
         self.page_viewer = None
+        self.fallback_viewer = None
         self.video_viewer = None
         self.text_viewer = None
         self.container_viewer = None
@@ -58,19 +60,6 @@ class Main(QMainWindow):
         # controls layout
         controls_layout = QHBoxLayout()
         controls_layout.setContentsMargins(0, 0, 0, 0)
-
-        # file not supported label (just repeat the name for now)
-        self.error_label = QLabel()
-
-        # adds the label to the list of added widgets so that it disappears automatically when you select another file.
-        self.added_viewers.append(self.error_label)
-        font = QFont("Monospace")
-        font.setPointSize(15)
-
-        self.error_label.setFont(font)
-        # self.error_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
-        self.error_label.setWordWrap(True)
-        self.error_label.setAlignment(Qt.AlignCenter)
 
         # viewer_container and layout
         self.viewer_container = QWidget()
@@ -106,7 +95,6 @@ class Main(QMainWindow):
         self.open_button.pressed.connect(self.open_with_app)
 
         # adding to layouts
-        self.viewer_container_layout.addWidget(self.error_label)
         controls_layout.addWidget(self.back_button)
         controls_layout.addWidget(self.open_button)
         controls_layout.addWidget(self.forward_button)
@@ -157,8 +145,8 @@ class Main(QMainWindow):
                 self.load_text_viewer(f.read())
 
         else:
-            self.error_label.setText(os.path.basename(self.current_file))
-            self.error_label.show()
+            self.load_fallback_viewer(path=self.current_file)
+
 
     def load_container_viewer(self, path):
         if self.container_viewer is None:
@@ -207,6 +195,16 @@ class Main(QMainWindow):
 
         self.page_viewer.load_file(path, extension)
         self.page_viewer.show()
+
+
+    def load_fallback_viewer(self,path):
+        if self.fallback_viewer is None:
+            self.fallback_viewer = FallbackViewer(self)
+            # adds the widget to its container.
+            self.add_widget(self.fallback_viewer)
+
+        self.fallback_viewer.load_file(path)
+        self.fallback_viewer.show()
 
     def set_directory(self):
         # gets the directory from the system arguments.
