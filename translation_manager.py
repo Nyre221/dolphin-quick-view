@@ -1,4 +1,4 @@
-from translations.placeholder_translations import available_placeholder_translations
+from translations import available_placeholder_translations
 import os
 
 class Translator:
