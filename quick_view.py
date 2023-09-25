@@ -112,7 +112,9 @@ class Main(QMainWindow):
         # retrieves the path of the current file
         self.current_file = self.files[index]
         # set the window title
-        self.setWindowTitle(self.current_file.split("/")[-1])
+        file_name = self.current_file.split("/")[-1]
+        file_count = len(self.files)
+        self.setWindowTitle(f"[{index}/{file_count}]  {file_name}")
 
         # avoid extracting the extension if it is a folder.
         if os.path.isdir(self.current_file):
