@@ -1,6 +1,12 @@
 REQUIRED:
-sudo dnf install python3-qt5 python3-poppler-qt5 antiword gstreamer1-plugin-libav gstreamer1-plugin-openh264
+sudo dnf install python3-qt5 python3-poppler-qt5 gstreamer1-plugin-libav gstreamer1-plugin-openh264
+
+OPTIONAL (for odt,csv,doc,docx,etc):
+
+libreoffice (flatpak version is fine too)
+Note: the flatpak version of libreoffice requires configuration:
+https://github.com/Nyre221/dolphin-quick-view/tree/main/extras/Libreoffice%20troubleshooting
 
 NOT REQUIRED FOR RELEASE VERSION:
 sudo dnf install python3-qpageview python3-pip
-pip install pyexcel pyexcel-xls pyexcel-xlsx textract rarfile pyexcel-ods pyexcel-ods3 pyexcel-odsr
+pip install rarfile

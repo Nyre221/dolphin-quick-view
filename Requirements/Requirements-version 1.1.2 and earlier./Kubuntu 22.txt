@@ -1,0 +1,7 @@
+REQUIRED:
+sudo apt install antiword python3-pyqt5.qtmultimedia gstreamer1.0-libav python3-poppler-qt5
+
+
+NOT REQUIRED FOR RELEASE VERSION:
+sudo apt install python3-pip python3-qpageview
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract rarfile pyexcel-ods pyexcel-ods3 pyexcel-odsr

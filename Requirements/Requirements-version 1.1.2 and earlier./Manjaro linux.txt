@@ -1,0 +1,7 @@
+REQUIRED:
+sudo pacman -S python-pyqt5 python-poppler-qt5 antiword
+
+
+NOT REQUIRED FOR RELEASE VERSION:
+sudo pacman -S  python-qpageview
+yay -S python-pyexcel python-pyexcel-xls python-pyexcel-xlsx python-textract python-pyexcel-ods python-pyexcel-ods3 python-rarfile

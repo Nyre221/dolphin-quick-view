@@ -1,0 +1,6 @@
+REQUIRED:
+sudo dnf install python3-qt5 python3-poppler-qt5 antiword gstreamer1-plugin-libav gstreamer1-plugin-openh264
+
+NOT REQUIRED FOR RELEASE VERSION:
+sudo dnf install python3-qpageview python3-pip
+pip install pyexcel pyexcel-xls pyexcel-xlsx textract rarfile pyexcel-ods pyexcel-ods3 pyexcel-odsr
