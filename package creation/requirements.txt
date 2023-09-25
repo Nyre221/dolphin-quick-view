@@ -1,12 +1,2 @@
-xlrd==1.2.0
-chardet==3.*
-textract
 qpageview
 rarfile
-pyexcel==0.7.0
-pyexcel-io==0.6.6
-pyexcel-xls==0.7.0
-pyexcel-xlsx==0.6.0
-pyexcel-ods
-pyexcel-ods3
-pyexcel-odsr
