@@ -8,7 +8,6 @@ from PyQt5.QtCore import Qt, QEvent
 # import viewers
 from page_viewer import PageViewer
 from text_viewer import TextViewer
-from table_viewer import TableViewer
 from video_viewer import VideoViewer
 from container_viewer import ContainerViewer
 # other
@@ -32,7 +31,6 @@ class Main(QMainWindow):
         self.page_viewer = None
         self.video_viewer = None
         self.text_viewer = None
-        self.table_viewer = None
         self.container_viewer = None
 
         # sets the files and folders to display.
@@ -137,13 +135,11 @@ class Main(QMainWindow):
             extension = os.path.splitext(self.current_file.lower())[-1]
 
         # load viewer based on extension or file type
-        if is_folder or extension in [".zip", ".gz", ".xz",".rar"]:
+        if is_folder or extension in [".zip", ".gz", ".xz", ".rar"]:
             self.load_container_viewer(self.current_file)
-        elif extension in [".pdf"]:
-            self.load_page_viewer(self.current_file, "pdf")
 
-        elif extension in [".png", ".jpeg", ".jpg", ".webp"]:
-            self.load_page_viewer(self.current_file, "img")
+        elif extension in [".pdf", ".png", ".jpeg", ".jpg", ".webp", ".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp"]:
+            self.load_page_viewer(self.current_file, extension)
 
         elif extension in [".svg", ".svgz"]:
             self.load_page_viewer(self.current_file, "svg")
@@ -151,16 +147,9 @@ class Main(QMainWindow):
         elif extension in [".mp4", ".mp3"]:
             self.load_video_viewer(self.current_file)
 
-        elif extension in [".doc", ".docx", ".odt", ".txt"]:
-            text = textract.process(self.current_file).decode("utf-8")
-            self.load_text_viewer(text)
-
         elif extension in [".md"]:
             with open(self.current_file, "r") as f:
                 self.load_text_viewer(f.read(), markdown=True)
-
-        elif extension in [".ods", ".xlsx", ".xls", ".csv"]:
-            self.load_table_viewer(self.current_file)
 
         # for simple text (.sh,.txt,.xml,.html,etc) which may or may not have an extension.
         elif "text/" in subprocess.run(["file", "--mime-type", self.current_file],
@@ -177,20 +166,9 @@ class Main(QMainWindow):
             self.container_viewer = ContainerViewer(self)
             # adds the widget to its container.
             self.add_widget(self.container_viewer)
-        
+
         self.container_viewer.show()
         self.container_viewer.load_file(path)
-
-
-    def load_table_viewer(self, path):
-        if self.table_viewer is None:
-            self.table_viewer = TableViewer(self)
-            # adds the widget to its container.
-            self.add_widget(self.table_viewer)
-
-        self.table_viewer.load_file(path)
-        self.table_viewer.show()
-        self.table_viewer.setFocus()
 
     def load_text_viewer(self, text, markdown=False):
         if self.text_viewer is None:
@@ -222,25 +200,14 @@ class Main(QMainWindow):
         self.video_viewer.open(path)
         self.video_viewer.show()
 
-    def load_page_viewer(self, path, _type):
+    def load_page_viewer(self, path, extension):
         if self.page_viewer is None:
             self.page_viewer = PageViewer(self)
             # adds the widget to its container.
             self.add_widget(self.page_viewer)
 
-        # based on the extension use the right function and set the display mode.
-        if _type == "pdf":
-            self.page_viewer.loadPdf(path)
-            self.page_viewer.pdf_mode()
-        elif _type == "img":
-            self.page_viewer.loadImages([path])
-            self.page_viewer.img_mode()
-        elif _type == "svg":
-            self.page_viewer.loadSvgs([path])
-            self.page_viewer.img_mode()
-
+        self.page_viewer.load_file(path, extension)
         self.page_viewer.show()
-        self.page_viewer.setFocus()
 
     def set_directory(self):
         # gets the directory from the system arguments.
@@ -269,7 +236,7 @@ class Main(QMainWindow):
             self.current_index = self.files.index(self.current_file)
 
         # elif args_count > 2 and sys.argv[-1] == "-a":
-        ##### NOT NEEDED ANYMORE: the action in the dolphin menu calls the shortcut and no longer quickview.
+        # NOT NEEDED ANYMORE: the action in the dolphin menu calls the shortcut and no longer quickview.
         #     # activated by the dophin action in the dropdown menu
         #     # this is necessary because the actions in the dolphin menu have no way of knowing
         #     # whether the selected one is the parent folder or a subfolder.
@@ -305,7 +272,7 @@ class Main(QMainWindow):
             self.files = self.sort_files(self.files)
             # add the parent directory to the files list
             # this is done so as not to break the back and forward function
-            self.files.insert(0,self.current_file)
+            self.files.insert(0, self.current_file)
             # set the index at the current fie
             self.current_index = self.files.index(self.current_file)
 
@@ -330,13 +297,13 @@ class Main(QMainWindow):
                 exit()
 
         else:  # for any other file
-            subprocess.run(["xdg-open", self.current_file])
+            subprocess.run(["xdg-open", f"{self.current_file}"])
             exit()
 
     def get_dolphin_window(self):
         # It is used to get the dolphin dbus address.
         dolphin_window = None
-        #the qdbus command can change name depending on the distro
+        # the qdbus command can change name depending on the distro
         qdbus_command = 'qdbus-qt5' if shutil.which('qdbus-qt5') else 'qdbus'
         # get dolphin windows
         windows = subprocess.run(
@@ -373,19 +340,18 @@ class Main(QMainWindow):
         for w in self.added_viewers:
             w.hide()
 
-    def sort_files(self,content_list):
+    def sort_files(self, content_list):
         ordered_files = []
         # sorting: alphabetical order and folders first.
         folders_in_list = [x for x in content_list if os.path.isdir(x)]
-        files_in_list =  [x for x in content_list if os.path.isfile(x)]
+        files_in_list = [x for x in content_list if os.path.isfile(x)]
 
-        folders_in_list = sorted(folders_in_list,key=str.lower)
-        files_in_list = sorted(files_in_list,key=str.lower)
+        folders_in_list = sorted(folders_in_list, key=str.lower)
+        files_in_list = sorted(files_in_list, key=str.lower)
 
         ordered_files.extend(folders_in_list)
         ordered_files.extend(files_in_list)
         return ordered_files
-
 
     def set_shortcut(self):
         for shortcut_close in ["q", Qt.Key_Escape, Qt.Key_Space]:
@@ -400,8 +366,6 @@ class Main(QMainWindow):
         for shortcut_open in ["w", Qt.Key_Return]:
             QShortcut(shortcut_open, self).activated.connect(
                 self.open_with_app)
-
-
 
 
 def launch():
