@@ -11,6 +11,8 @@ import rarfile
 from threading import Thread
 from random import randint
 
+from translation_manager import Translator
+
 
 class ContainerViewer(QWidget):
 
@@ -18,6 +20,8 @@ class ContainerViewer(QWidget):
         super(ContainerViewer, self).__init__(parent)
         #5GB. is used to determine whether the archive should be opened and its contents shown.
         self.maximum_archive_size = 5368709120
+        #to get translations
+        self.translator = Translator()
         # used to determine if threads are still needed.
         self.is_active_viewer = False
         # is used to discard a thread no longer needed.
@@ -58,32 +62,29 @@ class ContainerViewer(QWidget):
         # modified date label (section)
         label_modified_date_text = QLabel()
         label_modified_date_text.setFont(self.font_info_section)
-        label_modified_date_text.setText("Modified")
+        label_modified_date_text.setText(self.translator.get_translation("last_modified"))
         label_modified_date_text.setAlignment(Qt.AlignCenter)
         # modified date label (value)
         self.label_modified_date_value = QLabel()
-        self.label_modified_date_value.setText("Loading")  # placeholder
         self.label_modified_date_value.setFont(self.font_info_value)
         self.label_modified_date_value.setAlignment(Qt.AlignCenter)
 
         # size label (section)
         label_size_text = QLabel()
-        label_size_text.setText("Size")
+        label_size_text.setText(self.translator.get_translation("size"))
         label_size_text.setFont(self.font_info_section)
         label_size_text.setAlignment(Qt.AlignCenter)
         # size label (value)
         self.label_size_value = QLabel()
-        self.label_size_value.setText("Loading")  # placeholder
         self.label_size_value.setFont(self.font_info_value)
         self.label_size_value.setAlignment(Qt.AlignCenter)
         # files count label (section)
         label_files_count_text = QLabel()
-        label_files_count_text.setText("Files")
+        label_files_count_text.setText(self.translator.get_translation("files"))
         label_files_count_text.setFont(self.font_info_section)
         label_files_count_text.setAlignment(Qt.AlignCenter)
         # files count label (value)
         self.label_files_count_value = QLabel()
-        self.label_files_count_value.setText("Loading")  # placeholder
         self.label_files_count_value.setFont(self.font_info_value)
         self.label_files_count_value.setAlignment(Qt.AlignCenter)
         # separator
@@ -118,6 +119,7 @@ class ContainerViewer(QWidget):
 
         self.main_layout.addLayout(layout_info)
         self.main_layout.addWidget(self.list_widget)
+        self.__set_placeholder_text__()
 
     def load_file(self, path):
         # to stop the thread if it is no longer the active viewer.
@@ -227,8 +229,7 @@ class ContainerViewer(QWidget):
         # avoid opening the archive if it is too large.
         if os.stat(path).st_size > self.maximum_archive_size:
             # adds an item to let the user know that the content will not be shown.
-            self.__set_list_widget_items__([QListWidgetItem("Preview not available: the file is too large.")])
-            self.__set_labels_text__(file_count="Unknown")
+            self.__show_warning_file_too_big__()
             exit()
         # check if the thread is still needed.
         if not self.__continue_thread_execution__(thread_id):
@@ -262,8 +263,7 @@ class ContainerViewer(QWidget):
         # avoid opening the archive if it is too large.
         if os.stat(path).st_size > self.maximum_archive_size:
             # adds an item to let the user know that the content will not be shown.
-            self.__set_list_widget_items__([QListWidgetItem("Preview not available: the file is too large.")])
-            self.__set_labels_text__(file_count="Unknown")
+            self.__show_warning_file_too_big__()
             exit()
         # check if the thread is still needed.
         if not self.__continue_thread_execution__(thread_id):
@@ -298,8 +298,7 @@ class ContainerViewer(QWidget):
         # avoid opening the archive if it is too large.
         if os.stat(path).st_size > self.maximum_archive_size:
             # adds an item to let the user know that the content will not be shown.
-            self.__set_list_widget_items__([QListWidgetItem("Preview not available: the file is too large.")])
-            self.__set_labels_text__(file_count="Unknown")
+            self.__show_warning_file_too_big__()
             exit()
         # check if the thread is still needed.
         if not self.__continue_thread_execution__(thread_id):
@@ -476,11 +475,13 @@ class ContainerViewer(QWidget):
     def __set_placeholder_text__(self):
         self.list_widget.clear()
         # ph = placeholder
-        ph = "Loading"
+        ph = self.translator.get_translation("loading_placeholder")
         self.__set_labels_text__(name=ph, last_modified=ph,
                              size=ph, size_unit="", file_count=ph)
         # adds an element to qlistwidget to indicate that the files are loading.
-        self.list_widget.addItem(ph+"...")
+        self.list_widget.addItem(ph)
+        
+
 
     def hide(self) -> None:
         # to stop the thread if it is no longer the active viewer.
@@ -495,6 +496,13 @@ class ContainerViewer(QWidget):
         else:
             return False
 
+    def __show_warning_file_too_big__(self):
+        # adds an item to qlistwidget.
+        self.__set_list_widget_items__([QListWidgetItem(self.translator.get_translation("container_file_too_big"))])
+        # set file count text to "unknown"
+        self.__set_labels_text__(file_count=self.translator.get_translation("unknown"))
+
+         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     widget = ContainerViewer()
