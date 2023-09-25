@@ -10,4 +10,6 @@ dictionary = dict(
     libreoffice_timeout="Il documento ha impiegato troppo tempo a caricare.",
     libreoffice_not_found="Libreoffice non trovato:",
     libreoffice_file_not_found="File non trovato: Flatpak potrebbe non essere configurato correttamente:",
+    unsupported_file_type="Tipo di file non supportato.",
+
 )
