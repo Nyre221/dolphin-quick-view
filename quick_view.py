@@ -289,10 +289,9 @@ class Main(QMainWindow):
                 print("dolphin window not found")
                 return
             else:
-                args_1 = f'dbus-send --session --print-reply --type=method_call --dest={self.dolphin_window} /dolphin/Dolphin_1'
-                args_2 = f'org.kde.dolphin.MainWindow.openDirectories array:string:"file://{self.current_file}" boolean:false'
-                subprocess.run(["bash", "-c", args_1+" "+args_2],
-                               stdout=subprocess.PIPE)
+                qdbus_command = 'qdbus-qt5' if shutil.which('qdbus-qt5') else 'qdbus'
+                args = f"{qdbus_command} {self.dolphin_window} /dolphin/Dolphin_1  org.kde.dolphin.MainWindow.openDirectories 'file://{self.current_file}' false"
+                subprocess.run(["bash", "-c", args],stdout=subprocess.PIPE)
                 exit()
 
         else:  # for any other file
