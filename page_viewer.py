@@ -1,7 +1,7 @@
 import qpageview
 import shutil
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtGui import QPixmap, QFont,QCloseEvent
 from PyQt5.QtCore import Qt, pyqtSignal
 from translation_manager import Translator
 import sys
@@ -21,8 +21,9 @@ class PageViewer(QWidget):
     signLoadingArrested = pyqtSignal(bool, bool, bool, str)
     signConversionFinished = pyqtSignal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None,app=None):
         super(PageViewer, self).__init__(parent)
+        app.aboutToQuit.connect(self.__app_is_closing__)
         self.temp_dir = None
         self.conversion_process = None
         self.is_active_viewer = False
@@ -111,7 +112,8 @@ class PageViewer(QWidget):
         self.qpage.clear()
         # It is used to kill the process if the viewer has been hidden.
         self.is_active_viewer = True
-
+        # kills the process group if the old process used for pdf conversion is still running.
+        self.__kill_conversion_process__()
 
         # load and set the display mode based on the file.
         if extension == ".pdf":
@@ -159,9 +161,8 @@ class PageViewer(QWidget):
         th.start()
 
     def __convert_document_thread__(self, path, temp_dir):
-        if self.conversion_process is not None and self.conversion_process.poll() is None:
-            # kills the process group if the old process is still running.
-            os.killpg(self.conversion_process.pid, signal.SIGTERM)
+        # kills the process group if the old process is still running.
+        self.__kill_conversion_process__()
 
         # libreoffice shell command
         commands = f"{self.libreoffice_command} --headless --nolockcheck --norestore --convert-to pdf '{path}' --outdir {temp_dir} "
@@ -203,7 +204,6 @@ class PageViewer(QWidget):
                 pdf_path = output.decode(
                     "utf-8").split(">")[1].split("using filter")[0].strip()
 
-                print(os.path.exists(pdf_path))
                 if not os.path.exists(pdf_path):
                     # shows an error if for some reason libreoffice fails to give a path.
                     # True:path error
@@ -219,6 +219,9 @@ class PageViewer(QWidget):
                 self.signLoadingArrested.emit(
                     False, False, False, process_error.decode("utf-8"))
                 return
+        
+        # kills the process group 
+        self.__kill_conversion_process__()
 
     def __conversion_finished__(self, path: str):
         # calls the function with the path of the new pdf
@@ -226,6 +229,7 @@ class PageViewer(QWidget):
         self.qpage.setFocus()
 
     def __get_libreoffice_command__(self):
+        command = None
         # check if libreoffice is installed.
         if shutil.which('libreoffice'):
             command = "libreoffice"
@@ -264,7 +268,15 @@ class PageViewer(QWidget):
         self.label_message_name.setText("Name")
         self.label_message.setText("")
 
+    def __kill_conversion_process__(self):
+        # terminate the process used for PDF conversion if it is alive.
+        if self.conversion_process is not None and self.conversion_process.poll() is None:
+            os.killpg(self.conversion_process.pid, signal.SIGTERM)
 
+    def __app_is_closing__(self):
+        # closes the libreoffice process if it is still active. 
+        # This is because the process may remain active and slow down quickview the next time it is started.
+        self.__kill_conversion_process__(self)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     widget = PageViewer()

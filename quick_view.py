@@ -191,7 +191,8 @@ class Main(QMainWindow):
 
     def load_page_viewer(self, path, extension):
         if self.page_viewer is None:
-            self.page_viewer = PageViewer(self)
+            #self.app is used to connect the signal "aboutToQuit"
+            self.page_viewer = PageViewer(self,self.app)
             # adds the widget to its container.
             self.add_widget(self.page_viewer)
 
