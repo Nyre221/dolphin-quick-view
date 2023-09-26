@@ -33,7 +33,8 @@ class Main(QMainWindow):
         self.video_viewer = None
         self.text_viewer = None
         self.container_viewer = None
-
+        # used to manage the index indicator in the title bar.
+        self.is_parent_in_list = False
         # sets the files and folders to display.
         self.set_directory()
 
@@ -113,8 +114,11 @@ class Main(QMainWindow):
         self.current_file = self.files[index]
         # set the window title
         file_name = self.current_file.split("/")[-1]
-        file_count = len(self.files)
-        self.setWindowTitle(f"[{index}/{file_count}]  {file_name}")
+        if not self.is_parent_in_list:
+            self.setWindowTitle(f"[{index+1}/{len(self.files)}]  {file_name}")
+        else:
+            self.setWindowTitle(f"[{index}/{len(self.files)-1}]  {file_name}")
+
 
         # avoid extracting the extension if it is a folder.
         if os.path.isdir(self.current_file):
@@ -273,6 +277,8 @@ class Main(QMainWindow):
             # add the parent directory to the files list
             # this is done so as not to break the back and forward function
             self.files.insert(0, self.current_file)
+            # used to manage the index indicator in the title bar.
+            self.is_parent_in_list = True
             # set the index at the current fie
             self.current_index = self.files.index(self.current_file)
 
