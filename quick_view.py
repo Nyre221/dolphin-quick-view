@@ -119,7 +119,6 @@ class Main(QMainWindow):
         else:
             self.setWindowTitle(f"[{index}/{len(self.files)-1}]  {file_name}")
 
-
         # avoid extracting the extension if it is a folder.
         if os.path.isdir(self.current_file):
             # used to determine whether the container viewer should be used.
@@ -131,7 +130,7 @@ class Main(QMainWindow):
         if is_folder or extension in [".zip", ".gz", ".xz", ".rar"]:
             self.load_container_viewer(self.current_file)
 
-        elif extension in [".pdf", ".png", ".jpeg", ".jpg", ".webp", ".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp"]:
+        elif extension in [".pdf", ".png", ".jpeg", ".jpg", ".webp", ".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp", ".ppt", ".pptx"]:
             self.load_page_viewer(self.current_file, extension)
 
         elif extension in [".svg", ".svgz"]:
@@ -152,7 +151,6 @@ class Main(QMainWindow):
 
         else:
             self.load_fallback_viewer(path=self.current_file)
-
 
     def load_container_viewer(self, path):
         if self.container_viewer is None:
@@ -195,16 +193,15 @@ class Main(QMainWindow):
 
     def load_page_viewer(self, path, extension):
         if self.page_viewer is None:
-            #self.app is used to connect the signal "aboutToQuit"
-            self.page_viewer = PageViewer(self,self.app)
+            # self.app is used to connect the signal "aboutToQuit"
+            self.page_viewer = PageViewer(self, self.app)
             # adds the widget to its container.
             self.add_widget(self.page_viewer)
 
         self.page_viewer.load_file(path, extension)
         self.page_viewer.show()
 
-
-    def load_fallback_viewer(self,path):
+    def load_fallback_viewer(self, path):
         if self.fallback_viewer is None:
             self.fallback_viewer = FallbackViewer(self)
             # adds the widget to its container.
@@ -296,9 +293,10 @@ class Main(QMainWindow):
                 print("dolphin window not found")
                 return
             else:
-                qdbus_command = 'qdbus-qt5' if shutil.which('qdbus-qt5') else 'qdbus'
+                qdbus_command = 'qdbus-qt5' if shutil.which(
+                    'qdbus-qt5') else 'qdbus'
                 args = f"{qdbus_command} {self.dolphin_window} /dolphin/Dolphin_1  org.kde.dolphin.MainWindow.openDirectories 'file://{self.current_file}' false"
-                subprocess.run(["bash", "-c", args],stdout=subprocess.PIPE)
+                subprocess.run(["bash", "-c", args], stdout=subprocess.PIPE)
                 exit()
 
         else:  # for any other file

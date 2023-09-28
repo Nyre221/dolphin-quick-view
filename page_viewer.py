@@ -126,7 +126,7 @@ class PageViewer(QWidget):
             self.qpage.loadSvgs([path])
             self.qpage.setViewMode(qpageview.FitBoth)
             self.__file_loaded__()
-        elif extension in [".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp"]:
+        elif extension in [".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp",".ppt",".pptx"]:
             # converts to pdf.
             self.__convert_document__(path=path)
 
