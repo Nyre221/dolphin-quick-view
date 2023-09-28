@@ -16,10 +16,9 @@ Questo può accadere se stai usando la versione di libreoffice installata tramit
 Per esempio, su ubuntu è necessario installare `libreoffice-writer` (docx,doc,odt), `libreoffice-calc` (xlsx,xls,csv,ods) e `libreoffice-impress` (odp,ppt,pptx).  
 Se stai usando la versione flatpak, assicurati di non aver installato anche la versione del gestore dei pacchetti.
 
-## Errore: Libreoffice non trovato.
+## Errore: Libreoffice non è installato.
 
-Non hai installato libreoffice.
-
+Devi installare libreoffice per vedere l'anteprima.
 
 ## Errore: File non trovato: Flatpak potrebbe non essere configurato correttamente.
 
