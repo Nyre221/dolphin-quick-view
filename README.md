@@ -29,7 +29,7 @@ spacebar, q and ESC = quit
 If quick view doesn't open via dolphin's dropdown menu:
 open a terminal and type "dolphin", error messages will appear in the terminal window (possible missing dependencies)
 
-alternatively you can use this command: `~/.config/quick_view/quick_view.pyz /path/to/some/file` -s
+alternatively you can use this command: `~/.config/quick_view/quick_view.pyz /path/to/some/file -s`
 
 if dolphin_quick_view_shortcut.sh doesn't work, run: "sleep 5 ; ~/.config/quick_view/dolphin_quick_view_shortcut.sh" in a terminal and reactivate a dolphin window (you have 5 seconds).
 The errors should appear there.
