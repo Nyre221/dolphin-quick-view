@@ -1,7 +1,8 @@
+from random import randint
 import qpageview
 import shutil
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPixmap, QFont,QCloseEvent
+from PyQt5.QtGui import QPixmap, QFont, QCloseEvent
 from PyQt5.QtCore import Qt, pyqtSignal
 from translation_manager import Translator
 import sys
@@ -21,10 +22,13 @@ class PageViewer(QWidget):
     signLoadingArrested = pyqtSignal(bool, bool, bool, str)
     signConversionFinished = pyqtSignal(str)
 
-    def __init__(self, parent=None,app=None):
+    def __init__(self, parent=None, app=None):
         super(PageViewer, self).__init__(parent)
         app.aboutToQuit.connect(self.__app_is_closing__)
         self.temp_dir = None
+        # a precaution to make sure that the file selected PREVIOUSLY
+        #  is not loaded at the end of the conversion to pdf.
+        self.current_thread_id = 0
         self.conversion_process = None
         self.is_active_viewer = False
         self.libreoffice_command = self.__get_libreoffice_command__()
@@ -113,6 +117,17 @@ class PageViewer(QWidget):
         # It is used to kill the process if the viewer has been hidden.
         self.is_active_viewer = True
 
+        # get a random id for thread
+        # used to prevent the converted pdf file from being loaded if it is no longer the selected one.
+        random_id = randint(0, 1000)
+        # check that the id is not the same as the previous one.
+        while random_id == self.current_thread_id:
+            random_id = randint(0, 1000)
+        # killing the process would have been more logical,
+        # but I noticed that it can behave strangely sometimes and I don't want to risk anything.
+        # this problem happens when you view a pdf after viewing a file that requires conversion.
+        self.current_thread_id = random_id
+
         # load and set the display mode based on the file.
         if extension == ".pdf":
             self.qpage.loadPdf(path)
@@ -126,7 +141,7 @@ class PageViewer(QWidget):
             self.qpage.loadSvgs([path])
             self.qpage.setViewMode(qpageview.FitBoth)
             self.__file_loaded__()
-        elif extension in [".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp",".ppt",".pptx"]:
+        elif extension in [".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp", ".ppt", ".pptx"]:
             # converts to pdf.
             self.__convert_document__(path=path)
 
@@ -134,6 +149,10 @@ class PageViewer(QWidget):
         # hides the messages/loading screen and shows qpage.
         self.container_message.hide()
         self.qpage.show()
+        # resets the page position to 0.
+        # this is necessary because qpageview does not set the position to 0
+        #  if the viewing mode has been changed to a different one.
+        self.qpage.setPosition((0, 0, 0), False)
 
     def hide(self) -> None:
         # clears qpageview screen to save memory(doesn't seem to work).
@@ -159,6 +178,8 @@ class PageViewer(QWidget):
         th.start()
 
     def __convert_document_thread__(self, path, temp_dir):
+        # get the thread id
+        thread_id = self.current_thread_id
         # kills the process group if the old process is still running.
         self.__kill_conversion_process__(self.conversion_process)
 
@@ -194,8 +215,8 @@ class PageViewer(QWidget):
 
         # store the return code
         return_code = local_process.returncode
-        # send the path of the pdf if the return code is 0 and the viewer is active
-        if return_code == 0 and self.is_active_viewer:
+        # send the path of the pdf if the return code is 0, the viewer is active and the thread id is the current one
+        if thread_id == self.current_thread_id and return_code == 0 and self.is_active_viewer:
             output = local_process.communicate()[0]
             try:
                 # get the path
@@ -206,13 +227,13 @@ class PageViewer(QWidget):
                     # shows an error if for some reason libreoffice fails to give a path.
                     # True:path error
                     self.signLoadingArrested.emit(False, False, True, "")
-                    # kills the process group 
+                    # kills the process group
                     self.__kill_conversion_process__(local_process)
                     return
 
                 # send
                 self.signConversionFinished.emit(pdf_path)
-                # kills the process group 
+                # kills the process group
                 self.__kill_conversion_process__(local_process)
             except IndexError:
                 print("IndexError")
@@ -220,11 +241,9 @@ class PageViewer(QWidget):
                 # shows an error if for some reason libreoffice fails to give a path.
                 self.signLoadingArrested.emit(
                     False, False, False, process_error.decode("utf-8"))
-                # kills the process group 
+                # kills the process group
                 self.__kill_conversion_process__(local_process)
                 return
-        
-
 
     def __conversion_finished__(self, path: str):
         # calls the function with the path of the new pdf
@@ -271,16 +290,18 @@ class PageViewer(QWidget):
         self.label_message_name.setText("Name")
         self.label_message.setText("")
 
-    def __kill_conversion_process__(self,process):
+    def __kill_conversion_process__(self, process):
         # terminate the process used for PDF conversion if it is alive.
         if process is not None and process.poll() is None:
             os.killpg(process.pid, signal.SIGTERM)
 
     def __app_is_closing__(self):
         print("closing pageviewer")
-        # closes the libreoffice process if it is still active. 
+        # closes the libreoffice process if it is still active.
         # This is because the process may remain active and slow down quickview the next time it is started.
         self.__kill_conversion_process__(self.conversion_process)
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     widget = PageViewer()
