@@ -1,9 +1,12 @@
 # Requirements:
 
 To preview doc, docx, xls, xlsx, ods, odp, ppt, pptx and odt files you need to have libreoffice installed.
-If you are using the flatpak version you need to give libreoffice access to the `/tmp/` folder.
+If you are using the flatpak version you need to give libreoffice access to the `/tmp/` folder.  
+To do this, simply (after installing libreoffice) type the command: `sudo flatpak override org.libreoffice.LibreOffice --filesystem=/tmp` , or use `flatseal` and give permissions from there.
 
-To do this, simply (after installing libreoffice) type the command: `sudo flatpak override org.libreoffice.LibreOffice --filesystem=/tmp` , or by downloading `flatseal` and giving permissions from there.
+Libreoffice: https://flathub.org/apps/org.libreoffice.LibreOffice  
+Flatseal: https://flathub.org/apps/com.github.tchx84.Flatseal
+
 
 # Errors:
 
