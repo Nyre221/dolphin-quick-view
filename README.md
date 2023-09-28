@@ -3,7 +3,9 @@ Simple program to have a quick preview of the files in a folder (similar to Appl
 
 ![Screenshot-10-09-2023-CEST](https://github.com/Nyre221/dolphin-quick-view/assets/104171042/38bfe4e8-80da-4634-98d9-00a0f2a8c1ad)
 
-Supported files: mp3,mp4,jpg,webp,svg,svgz,doc,docx,odt,xls,xlsx,csv,ods,md,pdf
+## Supported files: 
+
+mp3,mp4,jpg,png,webp,svg,svgz,doc,docx,odt,xls,xlsx,csv,ods,odp,ppt,pptx,md,pdf,zip,rar,tar.gz,tar.xz
 
 ## Installation:
 1: Download the latest release from here and extract it: https://github.com/Nyre221/dolphin-quick-view/releases/
