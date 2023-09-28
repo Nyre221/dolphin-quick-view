@@ -8,7 +8,7 @@ dictionary = dict(
     click_here="Clicca Qui!",
     libreoffice_preview_unavailable="Anteprima non disponibile",
     libreoffice_timeout="Il documento ha impiegato troppo tempo a caricare.",
-    libreoffice_not_found="Libreoffice non trovato:",
+    libreoffice_not_found="Libreoffice non è installato:",
     libreoffice_file_not_found="File non trovato: Flatpak potrebbe non essere configurato correttamente:",
     unsupported_file_type="Tipo di file non supportato.",
 
