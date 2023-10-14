@@ -21,7 +21,7 @@ fi
 
 
 #additional attributes to pass if necessary
-parameter = ""
+parameter=""
 
 original_clipboard_content="$(dbus-send --session --print-reply --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.getClipboardContents | grep -v "method return time=" | sed -r '1s/^\s+//g' | sed ' s/^string "//' | sed '$ s/"$//')"
 sleep 0.1
