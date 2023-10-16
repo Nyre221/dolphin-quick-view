@@ -130,7 +130,7 @@ class Main(QMainWindow):
         if is_folder or extension in [".zip", ".gz", ".xz", ".rar"]:
             self.load_container_viewer(self.current_file)
 
-        elif extension in [".pdf", ".png", ".jpeg", ".jpg", ".webp", ".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp", ".ppt", ".pptx",".svg", ".svgz"]:
+        elif extension in [".pdf", ".png", ".jpeg", ".jpg", ".webp", ".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp", ".ppt", ".pptx",".svg", ".svgz",".kra"]:
             self.load_page_viewer(self.current_file, extension)
 
 

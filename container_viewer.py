@@ -361,6 +361,8 @@ class ContainerViewer(QWidget):
             "/usr/share/icons/breeze/mimetypes/16/application-vnd.oasis.opendocument.text.svg")
         self.iso_image_icon = QIcon(
             "/usr/share/icons/breeze/mimetypes/16/application-x-iso.svg")
+        self.krita_image_icon = QIcon(
+            "/usr/share/icons/breeze-dark/mimetypes/64/application-x-krita.svg")
 
     def __list_icon_chooser__(self, path, is_folder=False):
         # returns the icon based on the file type.
@@ -393,6 +395,8 @@ class ContainerViewer(QWidget):
             icon = self.document_icon
         elif extension in [".iso", ".img"]:
             icon = self.iso_image_icon
+        elif extension in [".kra"]:
+            icon = self.krita_image_icon
         else:
             icon = self.unknown_icon
         return icon

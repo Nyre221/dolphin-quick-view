@@ -14,6 +14,7 @@ import os
 import signal
 import time
 from queue import Queue
+import zipfile
 
 
 class PageViewer(QWidget):
@@ -144,6 +145,9 @@ class PageViewer(QWidget):
         elif extension in [".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp", ".ppt", ".pptx"]:
             # converts to pdf.
             self.__convert_document__(path=path)
+        elif extension in [".kra"]:
+            # converts to pdf.
+            self.__open_kra__(path=path)
 
     def __file_loaded__(self):
         # hides the messages/loading screen and shows qpage.
@@ -159,6 +163,20 @@ class PageViewer(QWidget):
         self.qpage.clear()
         self.is_active_viewer = False
         return super().hide()
+
+    def __open_kra__(self,path):
+        # create a temporary folder
+        if self.temp_dir is None:
+            self.temp_dir = tempfile.mkdtemp()
+
+        # open .kra and extract the preview
+        with zipfile.ZipFile(path, 'r') as zip_ref:
+            zip_ref.extract("mergedimage.png",self.temp_dir)
+
+        output_dir = self.temp_dir+"/mergedimage.png"
+        self.load_file(output_dir,".png")
+
+
 
     def __convert_document__(self, path):
         # shows a message and stops the function if libreoffice was not found.
