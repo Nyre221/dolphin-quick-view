@@ -375,7 +375,7 @@ class ContainerViewer(QWidget):
             icon = self.archive_icon
         elif extension in [".pdf"]:
             icon = self.pdf_icon
-        elif extension in [".png", ".jpg", ".jpeg", ".webp", ".svg", "svgz"]:
+        elif extension in [".png", ".jpg", ".jpeg", ".webp", ".svg", ".svgz"]:
             icon = self.img_icon
         elif extension in [".mp4"]:
             icon = self.video_icon
