@@ -385,7 +385,7 @@ class ContainerViewer(QWidget):
             icon = self.shell_icon
         elif extension in [".py"]:
             icon = self.python_icon
-        elif extension in [".ccp"]:
+        elif extension in [".ccp",".h"]:
             icon = self.c_language_icon
         elif extension in [".txt"]:
             icon = self.txt_icon
