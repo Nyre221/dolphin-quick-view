@@ -82,9 +82,6 @@ path="$(echo "$path" | rev |  cut -d'/' -f2-100 | rev)"
 elif [ -e "$path" ]; then
 # if the path is valid (the user had selected a file), set the variable to "-s"(selected):
 parameter="-s"
-else
-echo invalid path
-exit 1
 fi
 
 
