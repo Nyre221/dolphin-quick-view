@@ -36,7 +36,7 @@ dolphin=""
 #controls which dolphin window is active
 for w in $windows; do
 
-is_active_window=$(dbus-send --session --print-reply --type=method_call --dest=$w /dolphin/Dolphin_1 org.qtproject.Qt.QWidget.isActiveWindow)
+is_active_window=$(dbus-send --session --print-reply --dest=$w /dolphin/Dolphin_1 org.freedesktop.DBus.Properties.Get string:org.qtproject.Qt.QWidget string:isActiveWindow)
 [ "$?" != "0" ] && exit 1
 [ "$( echo $is_active_window | grep -i true)" ] &&  dolphin="$w"
 
