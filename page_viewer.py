@@ -138,7 +138,7 @@ class PageViewer(QWidget):
             self.qpage.loadImages([path])
             self.qpage.setViewMode(qpageview.FitBoth)
             self.__file_loaded__()
-        elif extension in [".svg"]:
+        elif extension in [".svg",".svgz"]:
             self.qpage.loadSvgs([path])
             self.qpage.setViewMode(qpageview.FitBoth)
             self.__file_loaded__()
