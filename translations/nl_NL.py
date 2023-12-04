@@ -1,7 +1,7 @@
 dictionary = dict(
     loading_placeholder="Bezig met laden…",
     size="Grootte",
-    last_modified="Recentste bewerking",
+    last_modified="Wijzigingsdatum",
     files="Bestanden",
     unknown="Onbekend",
     container_file_too_big="Het bestand is te groot om voor te kunnen vertonen.",
