@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton
 import sys
 
 # Adhere to naming conventions: https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html

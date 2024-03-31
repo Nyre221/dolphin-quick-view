@@ -1,9 +1,10 @@
 from random import randint
-import qpageview
 import shutil
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPixmap, QFont, QCloseEvent
-from PyQt5.QtCore import Qt, pyqtSignal
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
+from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtPdf import QPdfDocument
+from PySide6.QtGui import QPixmap, QFont
+from PySide6.QtCore import Qt, Signal
 from translation_manager import Translator
 import sys
 import subprocess
@@ -13,18 +14,16 @@ import shlex
 import os
 import signal
 import time
-from queue import Queue
-import zipfile
 
 
-class PageViewer(QWidget):
+class DocumentViewer(QWidget):
     # used to trigger a function in the main thread from the secondary thread.
     # Qt does not allow calling some widget functions from a secondary thread.
-    signLoadingArrested = pyqtSignal(bool, bool, bool, str)
-    signConversionFinished = pyqtSignal(str)
+    signLoadingArrested = Signal(bool, bool, bool, str)
+    signConversionFinished = Signal(str)
 
     def __init__(self, parent=None, app=None):
-        super(PageViewer, self).__init__(parent)
+        super(DocumentViewer, self).__init__(parent)
         app.aboutToQuit.connect(self.__app_is_closing__)
         self.temp_dir = None
         # a precaution to make sure that the file selected PREVIOUSLY
@@ -33,6 +32,7 @@ class PageViewer(QWidget):
         self.conversion_process = None
         self.is_active_viewer = False
         self.libreoffice_command = self.__get_libreoffice_command__()
+
         # the page to see if they have problems with libreoffice.
         self.libreoffice_help_page = "https://github.com/Nyre221/dolphin-quick-view/tree/main/extras/Libreoffice%20troubleshooting"
         # to get translations
@@ -49,33 +49,39 @@ class PageViewer(QWidget):
         self.font_label_message = QFont()
         self.font_label_message.setPointSize(10)
 
-        # qpageview
-        self.qpage = qpageview.View()
-        # set scroll speed
-        self.qpage.verticalScrollBar().setSingleStep(50)
+        #Creates the document
+        self.document = QPdfDocument(self)        
 
-        # img
+        #creates the view
+        self.pdf_view = QPdfView(self)
+        self.pdf_view.setDocument(self.document)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_view.verticalScrollBar().setSingleStep(25)
+        self.pdf_view.verticalScrollBar().setPageStep(1)
+
+        # loading img
         self.logo_img = QLabel()
-        self.logo_img.setAlignment(Qt.AlignCenter)
+        self.logo_img.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # sets the image size based on the screen size
         self.logo_size = QApplication.primaryScreen().size()*0.135
         self.logo_img.setPixmap(QPixmap("/usr/share/icons/breeze-dark/mimetypes/64/x-office-document.svg").scaled(
-            self.logo_size, Qt.KeepAspectRatioByExpanding, Qt.FastTransformation))
+            self.logo_size, Qt.AspectRatioMode.KeepAspectRatioByExpanding, Qt.TransformationMode.FastTransformation))
 
         # labels
         self.label_message_name = QLabel()
-        self.label_message_name.setAlignment(Qt.AlignCenter)
+        self.label_message_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_message_name.setFont(self.font_label_message_name)
         self.label_message_header = QLabel()
         self.label_message_header.setFont(self.font_label_message_header)
-        self.label_message_header.setAlignment(Qt.AlignCenter)
+        self.label_message_header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_message = QLabel()
         self.label_message.setFont(self.font_label_message)
-        self.label_message.setAlignment(Qt.AlignCenter)
+        self.label_message.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # allows to open external links.
         self.label_message.setWordWrap(True)
-        self.label_message.setTextFormat(Qt.RichText)
-        self.label_message.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        self.label_message.setTextFormat(Qt.TextFormat.RichText)
+        self.label_message.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
         self.label_message.setOpenExternalLinks(True)
         # layouts
         # main
@@ -90,7 +96,7 @@ class PageViewer(QWidget):
 
         # adding to layout
         self.layout_main.addWidget(self.container_message)
-        self.layout_main.addWidget(self.qpage)
+        self.layout_main.addWidget(self.pdf_view)
         self.layout_message.addWidget(self.logo_img)
         self.layout_message.addWidget(self.label_message_name)
         self.layout_message.addWidget(self.label_message_header)
@@ -110,11 +116,11 @@ class PageViewer(QWidget):
         self.__set_placeholder_text__()
         self.label_message_name.setText(path.split("/")[-1])
         # set the focus so you can scroll through the pages with the arrow keys.
-        self.qpage.setFocus()
+        self.pdf_view.setFocus()
         # gives space to the loading screen.
-        self.qpage.hide()
-        # removes the previously viewed document.
-        self.qpage.clear()
+        self.pdf_view.hide()
+        # closes the document
+        self.document.close()
         # It is used to kill the process if the viewer has been hidden.
         self.is_active_viewer = True
 
@@ -131,51 +137,22 @@ class PageViewer(QWidget):
 
         # load and set the display mode based on the file.
         if extension == ".pdf":
-            self.qpage.loadPdf(path)
-            self.qpage.setViewMode(qpageview.FitWidth)
-            self.__file_loaded__()
-        elif extension in [".png", ".jpeg", ".jpg", ".webp"]:
-            self.qpage.loadImages([path])
-            self.qpage.setViewMode(qpageview.FitBoth)
-            self.__file_loaded__()
-        elif extension in [".svg",".svgz"]:
-            self.qpage.loadSvgs([path])
-            self.qpage.setViewMode(qpageview.FitBoth)
+            self.document.load(path)
             self.__file_loaded__()
         elif extension in [".doc", ".docx", ".odt", ".ods", ".xlsx", ".xls", ".csv", ".odp", ".ppt", ".pptx"]:
             # converts to pdf.
             self.__convert_document__(path=path)
-        elif extension in [".kra"]:
-            # converts to pdf.
-            self.__open_kra__(path=path)
+
 
     def __file_loaded__(self):
-        # hides the messages/loading screen and shows qpage.
+        # hides the messages/loading screen and shows the pdf.
         self.container_message.hide()
-        self.qpage.show()
-        # resets the page position to 0.
-        # this is necessary because qpageview does not set the position to 0
-        #  if the viewing mode has been changed to a different one.
-        self.qpage.setPosition((0, 0, 0), False)
+        self.pdf_view.show()
+
 
     def hide(self) -> None:
-        # clears qpageview screen to save memory(doesn't seem to work).
-        self.qpage.clear()
         self.is_active_viewer = False
         return super().hide()
-
-    def __open_kra__(self,path):
-        # create a temporary folder
-        if self.temp_dir is None:
-            self.temp_dir = tempfile.mkdtemp()
-
-        # open .kra and extract the preview
-        with zipfile.ZipFile(path, 'r') as zip_ref:
-            zip_ref.extract("mergedimage.png",self.temp_dir)
-
-        output_dir = self.temp_dir+"/mergedimage.png"
-        self.load_file(output_dir,".png")
-
 
 
     def __convert_document__(self, path):
@@ -192,7 +169,7 @@ class PageViewer(QWidget):
         # use another thread to avoid blocking the interface.
         th = Thread(target=self.__convert_document_thread__,
                     args=(path, self.temp_dir))
-        th.setDaemon(True)
+        th.daemon=True
         th.start()
 
     def __convert_document_thread__(self, path, temp_dir):
@@ -266,7 +243,7 @@ class PageViewer(QWidget):
     def __conversion_finished__(self, path: str):
         # calls the function with the path of the new pdf
         self.load_file(path=path, extension=".pdf")
-        self.qpage.setFocus()
+        self.pdf_view.setFocus()
 
     def __get_libreoffice_command__(self):
         command = None
@@ -314,15 +291,18 @@ class PageViewer(QWidget):
             os.killpg(process.pid, signal.SIGTERM)
 
     def __app_is_closing__(self):
-        print("closing pageviewer")
+        print("closing documentviewer")
         # closes the libreoffice process if it is still active.
         # This is because the process may remain active and slow down quickview the next time it is started.
         self.__kill_conversion_process__(self.conversion_process)
 
+    # def resizeEvent(self, event: QResizeEvent) -> None:
+        # self.pdf_view.setZoomMode()
+        # return super().resizeEvent(event)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    widget = PageViewer()
+    widget = DocumentViewer()
     widget.resize(640, 480)
     widget.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

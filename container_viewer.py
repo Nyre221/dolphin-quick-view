@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QListWidgetItem, QFrame
-from PyQt5.QtGui import QPixmap, QFont, QIcon, QFontMetrics
-from PyQt5.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QListWidget, QHBoxLayout, QVBoxLayout, QListWidgetItem, QFrame
+from PySide6.QtGui import QPixmap, QFont, QIcon, QFontMetrics
+from PySide6.QtCore import Qt
 from datetime import datetime
 import sys
 import zipfile
@@ -17,7 +17,7 @@ from translation_manager import Translator
 class ContainerViewer(QWidget):
 
     def __init__(self, parent=None):
-        super(ContainerViewer, self).__init__(parent)
+        super(ContainerViewer, self).__init__()
         #5GB. is used to determine whether the archive should be opened and its contents shown.
         self.maximum_archive_size = 5368709120
         #to get translations
@@ -55,7 +55,7 @@ class ContainerViewer(QWidget):
         self.label_name = QLabel()
         self.label_name.setText("Name")
         self.label_name.setFont(self.font_label_name)
-        self.label_name.setAlignment(Qt.AlignCenter)
+        self.label_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # needed to elide the text of the name
         self.name_font_metrics = QFontMetrics(self.font_label_name)
 
@@ -63,33 +63,33 @@ class ContainerViewer(QWidget):
         label_modified_date_text = QLabel()
         label_modified_date_text.setFont(self.font_info_section)
         label_modified_date_text.setText(self.translator.get_translation("last_modified"))
-        label_modified_date_text.setAlignment(Qt.AlignCenter)
+        label_modified_date_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # modified date label (value)
         self.label_modified_date_value = QLabel()
         self.label_modified_date_value.setFont(self.font_info_value)
-        self.label_modified_date_value.setAlignment(Qt.AlignCenter)
+        self.label_modified_date_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # size label (section)
         label_size_text = QLabel()
         label_size_text.setText(self.translator.get_translation("size"))
         label_size_text.setFont(self.font_info_section)
-        label_size_text.setAlignment(Qt.AlignCenter)
+        label_size_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # size label (value)
         self.label_size_value = QLabel()
         self.label_size_value.setFont(self.font_info_value)
-        self.label_size_value.setAlignment(Qt.AlignCenter)
+        self.label_size_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # files count label (section)
         label_files_count_text = QLabel()
         label_files_count_text.setText(self.translator.get_translation("files"))
         label_files_count_text.setFont(self.font_info_section)
-        label_files_count_text.setAlignment(Qt.AlignCenter)
+        label_files_count_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # files count label (value)
         self.label_files_count_value = QLabel()
         self.label_files_count_value.setFont(self.font_info_value)
-        self.label_files_count_value.setAlignment(Qt.AlignCenter)
+        self.label_files_count_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # separator
         separator_line = QFrame()
-        separator_line.setFrameShape(QFrame.HLine)
+        separator_line.setFrameShape(QFrame.Shape.HLine)
 
         # widgets
         self.list_widget = QListWidget(self)
@@ -172,14 +172,14 @@ class ContainerViewer(QWidget):
         
 
         # allows closing the application even if the thread has not finished
-        th.setDaemon(True)
+        th.daemon=True
         #start the thread
         th.start()
         # uses another thread to set basic information about the file.
         # This makes things faster.
         th_2 = Thread(target=self.__set_path_info__, args=([path]))
         # allows closing the application even if the thread has not finished
-        th_2.setDaemon(True)
+        th_2.daemon=True
         th_2.start()
 #
 
@@ -402,14 +402,14 @@ class ContainerViewer(QWidget):
         return icon
 
     def __set_logo_icon__(self, path):
-        icon = QPixmap(path).scaled(self.logo_size, Qt.KeepAspectRatioByExpanding)
+        icon = QPixmap(path).scaled(self.logo_size, Qt.AspectRatioMode.KeepAspectRatioByExpanding)
         self.logo_img.setPixmap(icon)
 
     def __set_labels_text__(self, name=None, last_modified=None, size=None, size_unit="?", file_count=None):
         if name:
             # sets the text and elides it if necessary.
             self.label_name.setText(self.name_font_metrics.elidedText(
-                name, Qt.ElideMiddle,int(self.logo_size.width())))
+                name, Qt.TextElideMode.ElideMiddle,int(self.logo_size.width())))
         if last_modified:
             self.label_modified_date_value.setText(last_modified)
         if size is not None:

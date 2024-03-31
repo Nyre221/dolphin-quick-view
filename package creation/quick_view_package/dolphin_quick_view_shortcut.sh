@@ -14,8 +14,12 @@ if command -v qdbus >/dev/null 2>&1; then
     qdbus_command="qdbus"
 elif command -v qdbus-qt5 >/dev/null 2>&1; then
 qdbus_command="qdbus-qt5"
+elif command -v qdbus-qt6 >/dev/null 2>&1; then
+qdbus_command="qdbus-qt6"
+elif command -v qdbus6 >/dev/null 2>&1; then
+qdbus_command="qdbus6"
 else
-echo qdbus/qdbus-qt5 not found
+echo qdbus/qdbus-qt5/qdbus-qt6/qdbus6 not found
 exit 1
 fi
 
@@ -62,6 +66,9 @@ if [ ! -e "$path" ]; then
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/edit_select_all org.qtproject.Qt.QAction.trigger
 [ "$?" != "0" ] && exit 1
 sleep 0.1
+#enables copying the file path even if multiple files are selected (plasma 6)
+dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/copy_location org.qtproject.Qt.QAction.resetEnabled
+#gets file location
 dbus-send --session --print-reply --type=method_call --dest=$dolphin /dolphin/Dolphin_1/actions/copy_location org.qtproject.Qt.QAction.trigger
 [ "$?" != "0" ] && exit 1
 sleep 0.1

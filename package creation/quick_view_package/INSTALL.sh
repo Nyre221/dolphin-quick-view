@@ -23,6 +23,9 @@ echo -e "\nInstalling Quick View previewer for Dolphin..."
 mkdir -p ~/.config/quick_view || \
     exit_w_error "Failed to create install folder."
 
+mkdir -p ~/.local/share/kio/servicemenus/ || \
+    exit_w_error "Failed to create ServiceMenus folder."
+
 mkdir -p ~/.local/share/kservices5/ServiceMenus/ || \
     exit_w_error "Failed to create ServiceMenus folder."
 
@@ -40,6 +43,15 @@ chmod +x ~/.config/quick_view/dolphin_quick_view_shortcut.sh || \
 
 cp "$HERE"/quick_view.desktop ~/.local/share/kservices5/ServiceMenus/ || \
     exit_w_error "Failed to copy desktop file to ServiceMenus folder."
+
+chmod +x ~/.local/share/kservices5/ServiceMenus/quick_view.desktop || \
+    exit_w_error "Failed to set servicemenu script as executable."
+
+cp "$HERE"/quick_view.desktop ~/.local/share/kio/servicemenus/ || \
+    exit_w_error "Failed to copy desktop file to ServiceMenus folder."
+
+chmod +x ~/.local/share/kio/servicemenus/quick_view.desktop || \
+    exit_w_error "Failed to set servicemenu script as executable."
 
 
 ntfy_title="Quick View Installer"

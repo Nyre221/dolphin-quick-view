@@ -1,18 +1,8 @@
-import qpageview
-import shutil
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPixmap, QFont
-from PyQt5.QtCore import Qt, pyqtSignal
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
+from PySide6.QtGui import QPixmap, QFont
+from PySide6.QtCore import Qt
 from translation_manager import Translator
 import sys
-import subprocess
-from threading import Thread
-import tempfile
-import shlex
-import os
-import signal
-import time
-from queue import Queue
 
 
 class FallbackViewer(QWidget):
@@ -33,19 +23,19 @@ class FallbackViewer(QWidget):
 
         # img
         self.logo_img = QLabel()
-        self.logo_img.setAlignment(Qt.AlignCenter)
+        self.logo_img.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # sets the image size based on the screen size
         self.logo_size = QApplication.primaryScreen().size()*0.135
         self.logo_img.setPixmap(QPixmap("/usr/share/icons/breeze-dark/mimetypes/64/unknown.svg").scaled(
-            self.logo_size, Qt.KeepAspectRatioByExpanding, Qt.FastTransformation))
+            self.logo_size, Qt.AspectRatioMode.KeepAspectRatioByExpanding, Qt.TransformationMode.FastTransformation))
 
         # labels
         self.label_message_name = QLabel()
-        self.label_message_name.setAlignment(Qt.AlignCenter)
+        self.label_message_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_message_name.setFont(self.font_label_message_name)
         self.label_message = QLabel()
         self.label_message.setFont(self.font_label_message)
-        self.label_message.setAlignment(Qt.AlignCenter)
+        self.label_message.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # layouts
         # main
