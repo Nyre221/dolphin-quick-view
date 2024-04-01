@@ -3,8 +3,8 @@
 # import QT
 from PySide6.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStyle, \
     QSizePolicy
-from PySide6.QtGui import QFont, QShortcut
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QCloseEvent, QFont, QShortcut
+from PySide6.QtCore import Qt,QSize,QSettings
 # import viewers
 from document_viewer import DocumentViewer
 from image_viewer import ImageViewer
@@ -24,6 +24,7 @@ class Main(QMainWindow):
     def __init__(self, app):
         super().__init__()
         self.app = app
+        self.settings = QSettings("Nyre", "DolphinQuickView")
         # a way to access and check if the widget has been created
         self.added_viewers = []
         self.image_viewer = None
@@ -36,13 +37,13 @@ class Main(QMainWindow):
         self.is_parent_in_list = False
         # sets the files and folders to display.
         self.set_directory()
-
         # setting up ui
         self.setWindowIcon(self.style().standardIcon(
             QStyle.StandardPixmap.SP_FileDialogContentsView))
+        #gets the screen size.
         screen_size = app.primaryScreen().size()
-        self.resize(int(screen_size.width() * 0.5),
-                    int(screen_size.height() * 0.55))
+        #Reads window size settings and sets the default window size based on the screen resolution.
+        self.resize(self.settings.value("size", defaultValue=QSize(int(screen_size.width() * 0.5), int(screen_size.height() * 0.55))))
         self.create_ui()
         self.set_shortcut()
         self.setFocus()
@@ -317,7 +318,12 @@ class Main(QMainWindow):
         for shortcut_open in ["w", Qt.Key.Key_Return]:
             QShortcut(shortcut_open, self).activated.connect(
                 self.open_with_app)
-
+            
+    def closeEvent(self, event: QCloseEvent) -> None:
+        #save the window size in the settings.
+        self.settings.setValue("size", self.size())
+        return super().closeEvent(event)
+    
 
 def launch():
     app = QApplication(sys.argv)
