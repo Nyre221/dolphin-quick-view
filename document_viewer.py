@@ -55,7 +55,7 @@ class DocumentViewer(QWidget):
         #creates the view
         self.pdf_view = QPdfView(self)
         self.pdf_view.setDocument(self.document)
-        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)
         self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
         self.pdf_view.verticalScrollBar().setSingleStep(25)
         self.pdf_view.verticalScrollBar().setPageStep(1)
