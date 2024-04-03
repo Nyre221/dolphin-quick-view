@@ -1,0 +1,11 @@
+REQUIRED:
+sudo zypper install python*-pyside6 gstreamer-plugins-libav gstreamer-plugin-openh264 libva-devel
+
+OPTIONAL (for odt,csv,doc,docx,etc):
+
+libreoffice (flatpak version is fine too)
+Note: the flatpak version of libreoffice requires configuration:
+https://github.com/Nyre221/dolphin-quick-view/tree/main/extras/Libreoffice%20troubleshooting
+
+NOT REQUIRED FOR RELEASE VERSION:
+sudo zypper install python-rarfile
