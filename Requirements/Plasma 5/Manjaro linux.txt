@@ -1,5 +1,5 @@
 REQUIRED:
-sudo pacman -S python-pyqt5 python-poppler-qt5
+sudo pacman -S python-pyqt5 python-poppler-qt5 xclip wl-clipboard
 
 OPTIONAL (for odt,csv,doc,docx,etc):
 

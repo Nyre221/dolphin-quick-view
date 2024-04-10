@@ -1,5 +1,5 @@
 REQUIRED:
-sudo apt install python3-pyqt5.qtmultimedia gstreamer1.0-libav python3-poppler-qt5
+sudo apt install python3-pyqt5.qtmultimedia gstreamer1.0-libav python3-poppler-qt5 xclip wl-clipboard
 
 OPTIONAL (for odt,csv,doc,docx,etc):
 

@@ -1,5 +1,5 @@
 REQUIRED:
-sudo pacman -S pyside6
+sudo pacman -S pyside6 xclip wl-clipboard
 
 OPTIONAL (for odt,csv,doc,docx,etc):
 

@@ -1,5 +1,5 @@
 REQUIRED:
-sudo apt install python3-pip gstreamer1.0-libav libva-dev qdbus qdbus-qt6
+sudo apt install python3-pip gstreamer1.0-libav libva-dev qdbus qdbus-qt6 xclip wl-clipboard
 
 pip install PySide6
 

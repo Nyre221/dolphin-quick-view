@@ -1,5 +1,5 @@
 REQUIRED:
-sudo zypper install python*-pyside6 gstreamer-plugins-libav gstreamer-plugin-openh264 libva-devel
+sudo zypper install python*-pyside6 gstreamer-plugins-libav gstreamer-plugin-openh264 libva-devel xclip wl-clipboard
 
 OPTIONAL (for odt,csv,doc,docx,etc):
 
