@@ -1,5 +1,5 @@
 REQUIRED:
-sudo dnf install python3-qt5  python3-poppler-qt5  gstreamer1-plugin-libav gstreamer1-plugin-openh264 libjpeg-devel libjpeg-turbo-devel
+sudo dnf install python3-qt5  python3-poppler-qt5  gstreamer1-plugin-libav gstreamer1-plugin-openh264 libjpeg-devel libjpeg-turbo-devel xclip wl-clipboard
 
 OPTIONAL (for odt,csv,doc,docx,etc):
 
