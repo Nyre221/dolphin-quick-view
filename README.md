@@ -1,3 +1,12 @@
+# Discontinued
+The new C++ version is available here: https://github.com/Nyre221/Kiview  
+## Reasons for Discontinuing the Project
+
+With the new C++ version I see no reason to continue the python version and furthermore, this version is probably subject to the injection of malicious bash commands via the file name.  
+QuickView doesn't appear to be affected by the same command as Kiview but is likely affected in other ways: https://github.com/Nyre221/Kiview/issues/5 
+
+
+
 # dolphin-quick-view
 Simple program to have a quick preview of the files in a folder (similar to Apple's Quick Look)
 
